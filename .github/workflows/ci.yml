@@ -17,12 +17,17 @@ jobs:
         with:
             go-version: '1.26.3' # или '1.26.3', если go.mod не используется
 
+      - name: Show go.mod and directory
+        run: |
+          pwd
+          cat go.mod
+          ls -la
+
       - name: Tidy go module
         run: go mod tidy
-        
+
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v9
         with:
-            # Версия linter, собранная с Go 1.26
             version: v2.9.0
             args: ./...
