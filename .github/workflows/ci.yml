@@ -15,7 +15,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-            go-version-file: '1.26.3' # или '1.26.3', если go.mod не используется
+            go-version: '1.26.3' # или '1.26.3', если go.mod не используется
 
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v9
