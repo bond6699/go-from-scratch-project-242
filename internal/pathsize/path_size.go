@@ -54,7 +54,7 @@ func GetPathSize(config Config) (int64, error) {
 		return int64(0), nil
 	}
 
-	if info.IsDir() == false {
+	if !info.IsDir() {
 		return GetFileSize(config.Path)
 	} else {
 		return GetFolderSize(config.Path, config.Recursive, config.All)
