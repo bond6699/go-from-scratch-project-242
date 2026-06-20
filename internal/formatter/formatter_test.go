@@ -3,6 +3,7 @@ package formatter
 import "testing"
 
 func TestFormatter(t *testing.T) {
+
 	tests := []struct {
 		name string
 		size int64

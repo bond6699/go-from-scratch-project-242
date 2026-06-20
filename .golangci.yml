@@ -6,4 +6,6 @@ run:
   tests: true
 
 linters:
-  default: standard
+  default: all
+  disable:
+    - depguard

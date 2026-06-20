@@ -1,3 +1,4 @@
+// Package cli provides functions for run cli util.
 package cli
 
 import (
@@ -5,6 +6,7 @@ import (
     "log"
     "os"
     "context"
+	"errors"
 
 	"code/internal/analyzer"
 	"code/internal/flags"
@@ -12,10 +14,15 @@ import (
     "github.com/urfave/cli/v3"
 )
 
-//Action Logic
+// Error: path required
+var ErrPathRequired = errors.New("path is required")
+
+
+//nolint:forbidigo
+// ActionLogic processes the CLI command and prints the file/directory size.
 func ActionLogic(ctx context.Context, cmd *cli.Command) error {
 	if cmd.NArg() == 0 {
-		return fmt.Errorf("path is required")
+		return ErrPathRequired
 	}
 
 	path := cmd.Args().First()
@@ -26,26 +33,27 @@ func ActionLogic(ctx context.Context, cmd *cli.Command) error {
 	)
 	result, err := analyzer.Analyze(cliflags, path)
 	if err != nil {
-		return err
+		return fmt.Errorf("analyzing path %s: %w", path, err)
 	}
 
 	if cliflags.Human {
-		fmt.Printf("Directory %s have size: %s\n",path, formatter.Humanity(result))
-		return err
+		fmt.Printf("Directory %s has size: %s\n",path, formatter.Humanity(result))
+
+		return nil
 	}
-	
+
 	fmt.Println(result)
-	return err
-	
-	
+
+	return nil
 }
 
-//Run CLI Util
+// Run CLI Util.
+//nolint:exhaustruct
 func Run() {
     cmd := &cli.Command{
-        Name:  "hexlet-path-size",
-		Usage: "print size of a file or directory",
-		UsageText: "hexlet-path-size [global options] <path>",
+        Name:		"hexlet-path-size",
+		Usage:		"print size of a file or directory",
+		UsageText: 	"hexlet-path-size [global options] <path>",
 		Flags: []cli.Flag{
         	&cli.BoolFlag{Name: "recursive", Aliases: []string{"r"}},
 			&cli.BoolFlag{Name: "all", Aliases: []string{"a"}},
@@ -54,7 +62,8 @@ func Run() {
 		Action: ActionLogic,
     }
 
-    if err := cmd.Run(context.Background(), os.Args); err != nil {
+	err := cmd.Run(context.Background(), os.Args)
+    if err != nil {
         log.Fatal(err)
     }
 }

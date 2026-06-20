@@ -1,3 +1,5 @@
+// Package analyzer provides functions for calculating the size of files
+// and directories, with support for recursive traversal and hidden files.
 package analyzer
 
 import (
@@ -10,9 +12,11 @@ import (
 
 func isHidden(path string) bool {
 	base := filepath.Base(path)
+
 	return len(base) > 0 && string(base[0]) == "."
 }
 
+// AnalyzeFile returns the size of a single file at the given path.
 func AnalyzeFile(flags flags.CLIFlags, path string) (int64, error) {
 	info, err := os.Stat(path)
 	if err != nil {
@@ -22,12 +26,14 @@ func AnalyzeFile(flags flags.CLIFlags, path string) (int64, error) {
 	if !flags.All && isHidden(path) {
 		return 0, nil
 	}
+
 	return info.Size(), nil
 
 }
 
+// AnalyzeFolder returns the size of a folder at the given path.
 func AnalyzeFolder(flags flags.CLIFlags, path string) (int64, error) {
-	var totalSize int64 = 0
+	var totalSize int64
 	entries, err := os.ReadDir(path)
 	if err != nil {
 		return 0, err
@@ -42,26 +48,30 @@ func AnalyzeFolder(flags flags.CLIFlags, path string) (int64, error) {
 		}
 
 		if e.IsDir() {
-			if flags.Recursive {
-				size, err := AnalyzeFolder(flags, fullPath)
-				if err != nil {
-					return totalSize, err
-				}
-				totalSize += size
+			if !flags.Recursive {
+				continue
 			}
-			// Если не рекурсивно, папки не добавляем
-		} else {
-			fileInfo, err := e.Info()
+
+			size, err := AnalyzeFolder(flags, fullPath)
 			if err != nil {
 				return totalSize, err
 			}
-			totalSize += fileInfo.Size()
+			totalSize += size
+
+			continue
 		}
+
+		fileInfo, err := e.Info()
+		if err != nil {
+			return totalSize, err
+		}
+		totalSize += fileInfo.Size()
 	}
+
 	return totalSize, nil
 }
 
-// Analyze path size
+// Analyze path size.
 func Analyze(flags flags.CLIFlags, path string) (int64, error) {
 
 	info, err := os.Stat(path)
@@ -72,5 +82,6 @@ func Analyze(flags flags.CLIFlags, path string) (int64, error) {
 	if !info.IsDir() {
 		return AnalyzeFile(flags, path)
 	}
+
 	return AnalyzeFolder(flags, path)
 }
