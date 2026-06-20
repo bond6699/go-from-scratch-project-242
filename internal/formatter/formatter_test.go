@@ -3,10 +3,9 @@ package formatter
 import "testing"
 
 func TestFormatter(t *testing.T) {
-
 	tests := []struct {
-		name string
-		size int64
+		name     string
+		size     int64
 		expected string
 	}{
 		{"test1", 25318592, "24.14 MB"},

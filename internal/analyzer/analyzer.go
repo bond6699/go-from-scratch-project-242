@@ -9,7 +9,6 @@ import (
 	"code/internal/flags"
 )
 
-
 func isHidden(path string) bool {
 	base := filepath.Base(path)
 
@@ -28,12 +27,12 @@ func AnalyzeFile(flags flags.CLIFlags, path string) (int64, error) {
 	}
 
 	return info.Size(), nil
-
 }
 
 // AnalyzeFolder returns the size of a folder at the given path.
 func AnalyzeFolder(flags flags.CLIFlags, path string) (int64, error) {
 	var totalSize int64
+
 	entries, err := os.ReadDir(path)
 	if err != nil {
 		return 0, err
@@ -56,6 +55,7 @@ func AnalyzeFolder(flags flags.CLIFlags, path string) (int64, error) {
 			if err != nil {
 				return totalSize, err
 			}
+
 			totalSize += size
 
 			continue
@@ -65,6 +65,7 @@ func AnalyzeFolder(flags flags.CLIFlags, path string) (int64, error) {
 		if err != nil {
 			return totalSize, err
 		}
+
 		totalSize += fileInfo.Size()
 	}
 
@@ -73,7 +74,6 @@ func AnalyzeFolder(flags flags.CLIFlags, path string) (int64, error) {
 
 // Analyze path size.
 func Analyze(flags flags.CLIFlags, path string) (int64, error) {
-
 	info, err := os.Stat(path)
 	if err != nil {
 		return 0, err
