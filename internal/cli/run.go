@@ -8,6 +8,7 @@ import (
 
 	"code/internal/analyzer"
 	"code/internal/flags"
+	"code/internal/formatter"
     "github.com/urfave/cli/v3"
 )
 
@@ -20,11 +21,11 @@ func ActionLogic(ctx context.Context, cmd *cli.Command) error {
 	path := cmd.Args().First()
 	cliflags := flags.Create(
 		cmd.Bool("recursive"),
-		cmd.Bool("human"),
 		cmd.Bool("all"),
+		cmd.Bool("human"),
 	)
 	result, err := analyzer.Analyze(cliflags, path)
-	fmt.Println(result)
+	fmt.Println(result, formatter.Humanity(result))
 	return err
 }
 
