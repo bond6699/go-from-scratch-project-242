@@ -25,8 +25,19 @@ func ActionLogic(ctx context.Context, cmd *cli.Command) error {
 		cmd.Bool("human"),
 	)
 	result, err := analyzer.Analyze(cliflags, path)
-	fmt.Println(result, formatter.Humanity(result))
+	if err != nil {
+		return err
+	}
+
+	if cliflags.Human {
+		fmt.Printf("Directory %s have size: %s\n",path, formatter.Humanity(result))
+		return err
+	}
+	
+	fmt.Println(result)
 	return err
+	
+	
 }
 
 //Run CLI Util

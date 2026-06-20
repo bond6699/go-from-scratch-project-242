@@ -13,7 +13,7 @@ func getProjectRoot() string {
     return filepath.Join(filepath.Dir(filename), "../..")
 }
 
-func TestAdd(t *testing.T) {
+func TestAnalyzer(t *testing.T) {
 	root := getProjectRoot()
 	tests := []struct {
 		name string

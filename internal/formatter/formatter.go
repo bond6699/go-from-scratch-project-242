@@ -22,3 +22,4 @@ func Humanity(size int64) string {
 
 	return fmt.Sprintf("%.2f %s", result, sizeSuffixes[sizeSuffixesIndex])
 }
+
