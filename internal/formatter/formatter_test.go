@@ -8,11 +8,11 @@ func TestFormatter(t *testing.T) {
 		size     int64
 		expected string
 	}{
-		{"test1", 25318592, "24.14 MB"},
-		{"test2", 2077016, "1.98 MB"},
-		{"test3", 7304971, "6.96 MB"},
-		{"test4", 7899980, "7.53 MB"},
-		{"test5", 12745409, "12.15 MB"},
+		{"test1", 25318592, "24.14MB"},
+		{"test2", 2077016, "1.98MB"},
+		{"test3", 7304971, "6.96MB"},
+		{"test4", 7899980, "7.53MB"},
+		{"test5", 12745409, "12.15MB"},
 	}
 
 	for _, tt := range tests {

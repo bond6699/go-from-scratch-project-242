@@ -3,10 +3,9 @@
 package analyzer
 
 import (
+	"code/internal/flags"
 	"os"
 	"path/filepath"
-
-	"code/internal/flags"
 )
 
 func isHidden(path string) bool {
@@ -29,6 +28,30 @@ func AnalyzeFile(flags flags.CLIFlags, path string) (int64, error) {
 	return info.Size(), nil
 }
 
+// porcessFolder process one DirEntry.
+func porcessFolder(flags flags.CLIFlags, path string, entry os.DirEntry) (int64, error) {
+	fullPath := filepath.Join(path, entry.Name())
+
+	if !flags.All && isHidden(fullPath) {
+		return 0, nil
+	}
+
+	if entry.IsDir() {
+		if !flags.Recursive {
+			return 0, nil
+		}
+
+		return AnalyzeFolder(flags, fullPath)
+	}
+
+	fileInfo, err := entry.Info()
+	if err != nil {
+		return 0, err
+	}
+
+	return fileInfo.Size(), nil
+}
+
 // AnalyzeFolder returns the size of a folder at the given path.
 func AnalyzeFolder(flags flags.CLIFlags, path string) (int64, error) {
 	var totalSize int64
@@ -38,35 +61,13 @@ func AnalyzeFolder(flags flags.CLIFlags, path string) (int64, error) {
 		return 0, err
 	}
 
-	for _, e := range entries {
-		fullPath := filepath.Join(path, e.Name())
-
-		// Пропускаем скрытые, если All выключен
-		if !flags.All && isHidden(fullPath) {
-			continue
-		}
-
-		if e.IsDir() {
-			if !flags.Recursive {
-				continue
-			}
-
-			size, err := AnalyzeFolder(flags, fullPath)
-			if err != nil {
-				return totalSize, err
-			}
-
-			totalSize += size
-
-			continue
-		}
-
-		fileInfo, err := e.Info()
+	for _, entry := range entries {
+		size, err := porcessFolder(flags, path, entry)
 		if err != nil {
 			return totalSize, err
 		}
 
-		totalSize += fileInfo.Size()
+		totalSize += size
 	}
 
 	return totalSize, nil

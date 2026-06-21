@@ -1,12 +1,11 @@
 package analyzer
 
 import (
+	"code/internal/flags"
 	"log"
 	"path/filepath"
 	"runtime"
 	"testing"
-
-	"code/internal/flags"
 )
 
 func getProjectRoot() string {

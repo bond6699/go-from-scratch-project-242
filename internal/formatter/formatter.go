@@ -1,6 +1,7 @@
 package formatter
 
 import (
+	"code/internal/flags"
 	"fmt"
 	"math"
 )
@@ -11,7 +12,7 @@ const (
 )
 
 func Humanity(size int64) string {
-	sizeSuffixes := []string{"Byte", "KB", "MB", "GB"}
+	sizeSuffixes := []string{"Byte", "KB", "MB", "GB", "TB", "PB", "EB"}
 	sizeSuffixesIndex := 0
 
 	result := float64(size)
@@ -23,8 +24,19 @@ func Humanity(size int64) string {
 	result = math.Floor(result*roundFactor) / roundFactor
 
 	if result == float64(int64(result)) {
-		return fmt.Sprintf("%.0f %s", result, sizeSuffixes[sizeSuffixesIndex])
+		return fmt.Sprintf("%.0f%s", result, sizeSuffixes[sizeSuffixesIndex])
 	}
 
-	return fmt.Sprintf("%.2f %s", result, sizeSuffixes[sizeSuffixesIndex])
+	return fmt.Sprintf("%.2f%s", result, sizeSuffixes[sizeSuffixesIndex])
+}
+
+func Formatter(flags flags.CLIFlags, size int64) string {
+	var result string
+	if !flags.Human {
+		result = fmt.Sprintf("%dB", size)
+	} else {
+		result = Humanity(size)
+	}
+
+	return result
 }

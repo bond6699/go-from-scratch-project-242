@@ -1,0 +1,36 @@
+# Бинарники
+hexlet-path-size
+*.exe
+*.test
+
+# Логи
+*.log
+*.prof
+*.pprof
+*.cov
+
+# Директории сборки
+/bin/
+/dist/
+/build/
+/tmp/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Go
+vendor/
+/go.sum
+
+# Настройки окружения
+.env
+.env.local
+
+# Временные файлы
+coverage.out
+*.out

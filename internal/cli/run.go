@@ -2,23 +2,24 @@
 package cli
 
 import (
+	"code/internal/analyzer"
+	"code/internal/flags"
+	"code/internal/formatter"
 	"context"
 	"errors"
 	"fmt"
 	"log"
 	"os"
 
-	"code/internal/analyzer"
-	"code/internal/flags"
-	"code/internal/formatter"
 	"github.com/urfave/cli/v3"
 )
 
 // Error: path required.
 var ErrPathRequired = errors.New("path is required")
 
-//nolint:forbidigo
 // ActionLogic processes the CLI command and prints the file/directory size.
+//
+//nolint:forbidigo
 func ActionLogic(ctx context.Context, cmd *cli.Command) error {
 	if cmd.NArg() == 0 {
 		return ErrPathRequired
@@ -36,18 +37,15 @@ func ActionLogic(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("analyzing path %s: %w", path, err)
 	}
 
-	if cliflags.Human {
-		fmt.Printf("Directory %s has size: %s\n", path, formatter.Humanity(result))
+	formattedResult := formatter.Formatter(cliflags, result)
 
-		return nil
-	}
-
-	fmt.Println(result)
+	fmt.Println(formattedResult)
 
 	return nil
 }
 
 // Run CLI Util.
+//
 //nolint:exhaustruct
 func Run() {
 	cmd := &cli.Command{
@@ -55,9 +53,18 @@ func Run() {
 		Usage:     "print size of a file or directory",
 		UsageText: "hexlet-path-size [global options] <path>",
 		Flags: []cli.Flag{
-			&cli.BoolFlag{Name: "recursive", Aliases: []string{"r"}},
-			&cli.BoolFlag{Name: "all", Aliases: []string{"a"}},
-			&cli.BoolFlag{Name: "human"},
+			&cli.BoolFlag{
+				Name: "recursive", Aliases: []string{"r"},
+				Usage: "recursive size of directories.",
+			},
+			&cli.BoolFlag{
+				Name: "all", Aliases: []string{"a"},
+				Usage: "include hidden files and directories.",
+			},
+			&cli.BoolFlag{
+				Name: "human", Aliases: []string{"H"},
+				Usage: "human-readable sizes (auto-select unit)",
+			},
 		},
 		Action: ActionLogic,
 	}

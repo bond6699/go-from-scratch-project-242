@@ -1,13 +1,13 @@
 package flags
 
-//Flags struct.
+// Flags struct.
 type CLIFlags struct {
 	Recursive bool
 	Human     bool
 	All       bool
 }
 
-//Flags struct getter.
+// Flags struct getter.
 func Create(recursive, all, human bool) CLIFlags {
 	return CLIFlags{
 		Recursive: recursive,
