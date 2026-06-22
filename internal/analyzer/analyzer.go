@@ -6,12 +6,13 @@ import (
 	"code/internal/flags"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func isHidden(path string) bool {
 	base := filepath.Base(path)
 
-	return len(base) > 0 && string(base[0]) == "."
+	return strings.HasPrefix(base, ".")
 }
 
 // AnalyzeFile returns the size of a single file at the given path.

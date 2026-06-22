@@ -50,20 +50,20 @@ func ActionLogic(ctx context.Context, cmd *cli.Command) error {
 func Run() {
 	cmd := &cli.Command{
 		Name:      "hexlet-path-size",
-		Usage:     "print size of a file or directory",
+		Usage:     "print size of a file or directory; supports -r (recursive), -H (human-readable), -a (include hidden)",
 		UsageText: "hexlet-path-size [global options] <path>",
 		Flags: []cli.Flag{
 			&cli.BoolFlag{
 				Name: "recursive", Aliases: []string{"r"},
-				Usage: "recursive size of directories.",
-			},
-			&cli.BoolFlag{
-				Name: "all", Aliases: []string{"a"},
-				Usage: "include hidden files and directories.",
+				Usage: "recursive size of directories (default: false)",
 			},
 			&cli.BoolFlag{
 				Name: "human", Aliases: []string{"H"},
-				Usage: "human-readable sizes (auto-select unit)",
+				Usage: "human-readable sizes (auto-select unit) (default: false)",
+			},
+			&cli.BoolFlag{
+				Name: "all", Aliases: []string{"a"},
+				Usage: "include hidden files and directories (default: false)",
 			},
 		},
 		Action: ActionLogic,
