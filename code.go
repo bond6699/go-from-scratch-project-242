@@ -1,7 +1,7 @@
 package code
 
 import (
-	"code/internal/cli"
+	"code/internal/analyzer"
 	"code/internal/flags"
 )
 
