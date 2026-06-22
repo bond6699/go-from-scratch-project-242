@@ -7,5 +7,11 @@ import (
 
 func GetPathSize(path string) (int64, error) {
 	cliflags := flags.Create(true, true, true)
-	return analyzer.Analyzer()
+
+	result, err := analyzer.Analyze(cliflags, path)
+	if err != nil {
+		return 0, err
+	}
+
+	return result, nil
 }
