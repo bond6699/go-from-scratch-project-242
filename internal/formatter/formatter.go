@@ -15,6 +15,10 @@ func Humanity(size int64) string {
 	sizeSuffixes := []string{"B", "KB", "MB", "GB", "TB", "PB", "EB"}
 	sizeSuffixesIndex := 0
 
+	if size < int64(1024) {
+		return fmt.Sprintf("%dB", size)
+	}
+
 	result := float64(size)
 	for result >= float64(bytesInKB) {
 		result /= bytesInKB
@@ -22,10 +26,6 @@ func Humanity(size int64) string {
 	}
 
 	result = math.Floor(result*roundFactor) / roundFactor
-
-	if size < int64(1024) {
-		return fmt.Sprintf("%dB", size)
-	}
 
 	if result == float64(int64(result)) {
 		return fmt.Sprintf("%d.0%s", int64(result), sizeSuffixes[sizeSuffixesIndex])

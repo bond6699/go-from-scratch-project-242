@@ -4,7 +4,6 @@ import (
 	"code/internal/analyzer"
 	"code/internal/flags"
 	"code/internal/formatter"
-	"code/internal/cli"
 )
 
 // GetPathSize возвращает человекочитаемый размер пути в виде строки.
@@ -19,9 +18,6 @@ func GetPathSize(path string, recursive, human, all bool) (string, error) {
 	}
 
 	sizeStr := formatter.Formatter(cliflags, size)
-	return sizeStr, nil
-}
 
-func main() {
-	cli.Run()
+	return sizeStr, nil
 }
