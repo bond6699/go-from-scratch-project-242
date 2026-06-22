@@ -37,7 +37,7 @@ func ActionLogic(ctx context.Context, cmd *cli.Command) error {
 
 	formattedResult := formatter.Formatter(cliflags, result)
 
-	fmt.Println(formattedResult)
+	fmt.Printf("%s\t%s\n", formattedResult, path)
 
 	return nil
 }
