@@ -1,21 +1,9 @@
-package code
+package main
 
 import (
-	"code/internal/analyzer"
-	"code/internal/flags"
-	"code/internal/formatter"
-	"fmt"
+	"code/internal/cli"
 )
 
-func GetPathSize(path string, recursive, human, all bool) (string, error) {
-	cliflags := flags.Create(recursive, human, all)
-
-	size, err := analyzer.Analyze(cliflags, path)
-	if err != nil {
-		return "", err
-	}
-
-	sizeStr := formatter.Formatter(cliflags, size)
-
-	return fmt.Sprintf("%s\t%s", sizeStr, path), nil
+func main() {
+	cli.Run()
 }
