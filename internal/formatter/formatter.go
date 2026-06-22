@@ -30,9 +30,9 @@ func Humanity(size int64) string {
 	return fmt.Sprintf("%.2f%s", result, sizeSuffixes[sizeSuffixesIndex])
 }
 
-func Formatter(flags flags.CLIFlags, size int64) string {
+func Formatter(cmdFlags flags.CLIFlags, size int64) string {
 	var result string
-	if !flags.Human {
+	if !cmdFlags.Human {
 		result = fmt.Sprintf("%dB", size)
 	} else {
 		result = Humanity(size)

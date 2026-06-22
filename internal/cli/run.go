@@ -18,8 +18,6 @@ import (
 var ErrPathRequired = errors.New("path is required")
 
 // ActionLogic processes the CLI command and prints the file/directory size.
-//
-//nolint:forbidigo
 func ActionLogic(ctx context.Context, cmd *cli.Command) error {
 	if cmd.NArg() == 0 {
 		return ErrPathRequired
@@ -45,8 +43,6 @@ func ActionLogic(ctx context.Context, cmd *cli.Command) error {
 }
 
 // Run CLI Util.
-//
-//nolint:exhaustruct
 func Run() {
 	cmd := &cli.Command{
 		Name:      "hexlet-path-size",

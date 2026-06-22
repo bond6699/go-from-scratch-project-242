@@ -58,42 +58,43 @@ go install ./cmd/hexlet-path-size
 | `--human` | `-H` | Выводить размер в человекочитаемом формате (KB, MB, GB) | `false` |
 | `--help` | `-h` | Показать справку | — |
 
-> **Примечание:** флаг `-h` зарезервирован для `--human`, поэтому для вывода справки используйте `--help`.
-
 ### Примеры
 
 #### 1. Размер одного файла (в байтах)
 
 ```bash
 ./hexlet-path-size photo.jpg
-# Вывод: 153600
+# Вывод: 153600B
 ```
 
 #### 2. Размер текущей директории (без рекурсии, без скрытых)
 
 ```bash
 ./hexlet-path-size .
-# Вывод: 4096 (размер самой директории)
+# Вывод: 4096B (размер самой директории)
 ```
 
 #### 3. Рекурсивный подсчёт всего проекта
 
 ```bash
 ./hexlet-path-size -r ~/myproject
-# Вывод: 1048576 (общий размер всех файлов)
+# Вывод: 1048576B (общий размер всех файлов)
 ```
 
 #### 4. Рекурсивно, со скрытыми файлами, в человекочитаемом формате
 
 ```bash
-./hexlet-path-size -r -a --human ./project
+./hexlet-path-size -r -a -H ./project
 # Вывод: 1.23GB
 ```
 
 #### 5. Комбинированный вывод с указанием пути
 
 ```bash
-./hexlet-path-size -r --human /var/log
+./hexlet-path-size -r -H /var/log
 # Вывод: 456.78MB
 ```
 
+#### 6. ASCIINEMA Test, Build and Run
+
+[![asciicast](https://asciinema.org/a/vSBm8O7vYUjdh9wh.svg)](https://asciinema.org/a/vSBm8O7vYUjdh9wh)

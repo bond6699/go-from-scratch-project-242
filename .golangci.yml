@@ -76,35 +76,7 @@ linters:
           disabled: true
 
     gocritic:
-      enabled-checks:
-        - appendAssign
-        - argOrder
-        - assignOp
-        - badCall
-        - badCond
-        - captLocal
-        - caseOrder
-        - defaultCaseOrder
-        - dupArg
-        - dupBranchBody
-        - dupCase
-        - elseif
-        - exitAfterDefer
-        - flagDeref
-        - flagName
-        - hugeParam
-        - ifElseChain
-        - mapKey
-        - nestingReduce
-        - nilValReturn
-        - regexpMust
-        - sloppyLen
-        - switchTrue
-        - truncateCmp
-        - typeSwitchVar
-        - underef
-        - unnecessaryBlock
-        - weakCond
+      enable-all: true
 
     testifylint:
       enable-all: true

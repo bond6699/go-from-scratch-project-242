@@ -14,7 +14,7 @@ func getProjectRoot() string {
 		log.Fatal("failed to get caller info")
 	}
 
-	return filepath.Join(filepath.Dir(filename), "../..")
+	return filepath.Join(filepath.Dir(filename), "..", "..")
 }
 
 func TestAnalyzer(t *testing.T) {

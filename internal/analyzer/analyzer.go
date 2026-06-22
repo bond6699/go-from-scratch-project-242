@@ -16,13 +16,13 @@ func isHidden(path string) bool {
 }
 
 // AnalyzeFile returns the size of a single file at the given path.
-func AnalyzeFile(flags flags.CLIFlags, path string) (int64, error) {
+func AnalyzeFile(cmdFlags flags.CLIFlags, path string) (int64, error) {
 	info, err := os.Stat(path)
 	if err != nil {
 		return 0, err
 	}
 
-	if !flags.All && isHidden(path) {
+	if !cmdFlags.All && isHidden(path) {
 		return 0, nil
 	}
 
@@ -30,19 +30,19 @@ func AnalyzeFile(flags flags.CLIFlags, path string) (int64, error) {
 }
 
 // porcessFolder process one DirEntry.
-func porcessFolder(flags flags.CLIFlags, path string, entry os.DirEntry) (int64, error) {
+func porcessFolder(cmdFlags flags.CLIFlags, path string, entry os.DirEntry) (int64, error) {
 	fullPath := filepath.Join(path, entry.Name())
 
-	if !flags.All && isHidden(fullPath) {
+	if !cmdFlags.All && isHidden(fullPath) {
 		return 0, nil
 	}
 
 	if entry.IsDir() {
-		if !flags.Recursive {
+		if !cmdFlags.Recursive {
 			return 0, nil
 		}
 
-		return AnalyzeFolder(flags, fullPath)
+		return AnalyzeFolder(cmdFlags, fullPath)
 	}
 
 	fileInfo, err := entry.Info()
@@ -54,7 +54,7 @@ func porcessFolder(flags flags.CLIFlags, path string, entry os.DirEntry) (int64,
 }
 
 // AnalyzeFolder returns the size of a folder at the given path.
-func AnalyzeFolder(flags flags.CLIFlags, path string) (int64, error) {
+func AnalyzeFolder(cmdFlags flags.CLIFlags, path string) (int64, error) {
 	var totalSize int64
 
 	entries, err := os.ReadDir(path)
@@ -63,7 +63,7 @@ func AnalyzeFolder(flags flags.CLIFlags, path string) (int64, error) {
 	}
 
 	for _, entry := range entries {
-		size, err := porcessFolder(flags, path, entry)
+		size, err := porcessFolder(cmdFlags, path, entry)
 		if err != nil {
 			return totalSize, err
 		}
@@ -75,15 +75,15 @@ func AnalyzeFolder(flags flags.CLIFlags, path string) (int64, error) {
 }
 
 // Analyze path size.
-func Analyze(flags flags.CLIFlags, path string) (int64, error) {
+func Analyze(cmdFlags flags.CLIFlags, path string) (int64, error) {
 	info, err := os.Stat(path)
 	if err != nil {
 		return 0, err
 	}
 
 	if !info.IsDir() {
-		return AnalyzeFile(flags, path)
+		return AnalyzeFile(cmdFlags, path)
 	}
 
-	return AnalyzeFolder(flags, path)
+	return AnalyzeFolder(cmdFlags, path)
 }
