@@ -24,7 +24,7 @@ func Humanity(size int64) string {
 	result = math.Floor(result*roundFactor) / roundFactor
 
 	if result == float64(int64(result)) {
-		return fmt.Sprintf("%d%s", int64(result), sizeSuffixes[sizeSuffixesIndex])
+		return fmt.Sprintf("%d.0%s", int64(result), sizeSuffixes[sizeSuffixesIndex])
 	}
 
 	return fmt.Sprintf("%.2f%s", result, sizeSuffixes[sizeSuffixesIndex])
