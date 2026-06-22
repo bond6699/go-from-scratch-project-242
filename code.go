@@ -3,15 +3,19 @@ package code
 import (
 	"code/internal/analyzer"
 	"code/internal/flags"
+	"code/internal/formatter"
+	"fmt"
 )
 
-func GetPathSize(path string, recursive, human, all bool) (int64, error) {
+func GetPathSize(path string, recursive, human, all bool) (string, error) {
 	cliflags := flags.Create(recursive, human, all)
 
-	result, err := analyzer.Analyze(cliflags, path)
+	size, err := analyzer.Analyze(cliflags, path)
 	if err != nil {
-		return 0, err
+		return "", err
 	}
 
-	return result, nil
+	sizeStr := formatter.Formatter(cliflags, size)
+
+	return fmt.Sprintf("%s\t%s", sizeStr, path), nil
 }

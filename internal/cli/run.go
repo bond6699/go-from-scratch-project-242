@@ -35,16 +35,15 @@ func ActionLogic(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("analyzing path %s: %w", path, err)
 	}
 
-	if !cliflags.Human {
-		fmt.Println(result)
-	} else {
-		fmt.Println(formatter.Humanity(result))
-	}
+	formattedResult := formatter.Formatter(cliflags, result)
+
+	fmt.Println(formattedResult)
 
 	return nil
 }
 
 // Run CLI Util.
+
 func Run() {
 	cmd := &cli.Command{
 		Name:      "hexlet-path-size",
