@@ -5,7 +5,6 @@ import (
 	"code/internal/flags"
 	"code/internal/formatter"
 	"code/internal/cli"
-	"fmt"
 )
 
 // GetPathSize возвращает человекочитаемый размер пути в виде строки.
