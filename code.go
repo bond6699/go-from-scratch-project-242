@@ -5,8 +5,8 @@ import (
 	"code/internal/flags"
 )
 
-func GetPathSize(path string) (int64, error) {
-	cliflags := flags.Create(true, true, true)
+func GetPathSize(path string, recursive, human, all bool) (int64, error) {
+	cliflags := flags.Create(recursive, human, all)
 
 	result, err := analyzer.Analyze(cliflags, path)
 	if err != nil {
