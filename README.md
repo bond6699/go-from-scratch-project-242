@@ -1,5 +1,8 @@
 # hexlet-path-size
 
+[![hexlet-check](https://github.com/bond6699/go-from-scratch-project-242/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/bond6699/go-from-scratch-project-242/actions/workflows/hexlet-check.yml)
+[![CI](https://github.com/bond6699/go-from-scratch-project-242/actions/workflows/CI.yml/badge.svg)](https://github.com/bond6699/go-from-scratch-project-242/actions/workflows/CI.yml)
+
 Консольная утилита для подсчёта размера файлов и директорий (аналог `du` с расширенными возможностями).  
 Написана на Go в рамках учебного проекта.
 
