@@ -35,9 +35,11 @@ func ActionLogic(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("analyzing path %s: %w", path, err)
 	}
 
-	formattedResult := formatter.Formatter(cliflags, result)
-
-	fmt.Println(formattedResult)
+	if !cliflags.Human {
+		fmt.Println(result)
+	} else {
+		fmt.Println(formatter.Humanity(result))
+	}
 
 	return nil
 }

@@ -12,7 +12,7 @@ const (
 )
 
 func Humanity(size int64) string {
-	sizeSuffixes := []string{"Byte", "KB", "MB", "GB", "TB", "PB", "EB"}
+	sizeSuffixes := []string{"B", "KB", "MB", "GB", "TB", "PB", "EB"}
 	sizeSuffixesIndex := 0
 
 	result := float64(size)
