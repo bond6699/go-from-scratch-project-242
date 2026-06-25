@@ -46,7 +46,7 @@ func porcessFolder(cliArgs CLIArgs, path string, entry os.DirEntry) (int64, erro
 			return 0, nil
 		}
 
-		return AnalyzeFolder(cliArgs, fullPath)
+		return analyzeFolder(cliArgs, fullPath)
 	}
 
 	fileInfo, err := entry.Info()
