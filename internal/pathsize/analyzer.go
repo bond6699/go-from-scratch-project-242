@@ -3,10 +3,10 @@
 package pathsize
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
-	"fmt"
 )
 
 type CLIArgs struct {
@@ -15,8 +15,8 @@ type CLIArgs struct {
 	Human     bool
 }
 
-// AnalyzeFile returns the size of a single file at the given path.
-func analyzeFile(cliArgs CLIArgs, path string) (int64, error) {
+// analyzeFile returns the size of a single file at the given path.
+func analyzeFile(path string) (int64, error) {
 	info, err := os.Stat(path)
 	if err != nil {
 		return 0, err
@@ -24,8 +24,6 @@ func analyzeFile(cliArgs CLIArgs, path string) (int64, error) {
 
 	return info.Size(), nil
 }
-
-
 
 func isHidden(path string) bool {
 	base := filepath.Base(path)
@@ -85,10 +83,9 @@ func Analyze(cliArgs CLIArgs, path string) (int64, error) {
 		return 0, err
 	}
 
-
 	var result int64
 	if !info.IsDir() {
-		result, err = analyzeFile(cliArgs, path)
+		result, err = analyzeFile(path)
 	} else {
 		result, err = analyzeFolder(cliArgs, path)
 	}
@@ -99,8 +96,6 @@ func Analyze(cliArgs CLIArgs, path string) (int64, error) {
 
 	return result, nil
 }
-
-
 
 const (
 	bytesInKB   = 1024
@@ -122,7 +117,6 @@ func humanize(size int64) string {
 		sizeSuffixesIndex++
 	}
 
-
 	if result == float64(int64(result)) {
 		return fmt.Sprintf("%d.0%s", int64(result), sizeSuffixes[sizeSuffixesIndex])
 	}
@@ -130,10 +124,9 @@ func humanize(size int64) string {
 	return fmt.Sprintf("%.2f%s", result, sizeSuffixes[sizeSuffixesIndex])
 }
 
-
 func GetHumanFormattedResult(cliArgs CLIArgs, size int64, path string) string {
 	var formattedResult string
-	
+
 	if cliArgs.Human {
 		formattedResult = humanize(size)
 	} else {
@@ -145,5 +138,4 @@ func GetHumanFormattedResult(cliArgs CLIArgs, size int64, path string) string {
 	}
 
 	return formattedResult
-	
 }

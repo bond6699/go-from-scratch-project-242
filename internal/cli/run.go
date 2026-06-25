@@ -3,11 +3,11 @@ package cli
 
 import (
 	"code/internal/pathsize"
-	"path/filepath"
 	"context"
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/urfave/cli/v3"
 )
@@ -15,24 +15,31 @@ import (
 func cliArgsParse(cmd *cli.Command) (pathsize.CLIArgs, string, error) {
 	args := cmd.Args().Slice()
 	if len(args) > 1 {
-		return pathsize.CLIArgs{}, "", fmt.Errorf("Error: expected 1 path, got %d. Usage: hexlet-path-size [options] <path>", len(args))
+		return pathsize.CLIArgs{}, "", fmt.Errorf(
+			"error: expected 1 path, got %d. Usage: hexlet-path-size [options] <path>",
+			len(args),
+		)
 	} else if len(args) == 0 {
-		return pathsize.CLIArgs{}, "", fmt.Errorf("Error: expected 1 path, got 0. Usage: hexlet-path-size [options] <path>")
+		return pathsize.CLIArgs{}, "", fmt.Errorf(
+			"error: expected 1 path, got 0. Usage: hexlet-path-size [options] <path>",
+		)
 	}
 
 	path := filepath.Clean(args[0])
+
 	_, err := os.Stat(path)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return pathsize.CLIArgs{}, "", fmt.Errorf("Error: Recived path \"%s\" is not exist", path)
+			return pathsize.CLIArgs{}, "", fmt.Errorf("error: Received path \"%s\" is not exist", path)
 		}
-		return pathsize.CLIArgs{}, "", fmt.Errorf("Error with recived path \"%s\"", path)
+
+		return pathsize.CLIArgs{}, "", fmt.Errorf("error with received path \"%s\"", path)
 	}
 
 	return pathsize.CLIArgs{
-		Recursive: cmd.Bool("recursive"), 
-		Human: cmd.Bool("human"),
-		All: cmd.Bool("all"), 
+		Recursive: cmd.Bool("recursive"),
+		Human:     cmd.Bool("human"),
+		All:       cmd.Bool("all"),
 	}, path, nil
 }
 
@@ -44,8 +51,9 @@ func actionLogic(ctx context.Context, cmd *cli.Command) error {
 
 	result, err := pathsize.Analyze(cliArgs, path)
 	if err != nil {
-		return fmt.Errorf("Error analyzing path %s: %w", path, err)
+		return fmt.Errorf("error analyzing path %s: %w", path, err)
 	}
+
 	formattedResult := pathsize.GetHumanFormattedResult(cliArgs, result, path)
 
 	fmt.Println(formattedResult)
