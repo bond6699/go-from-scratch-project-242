@@ -3,6 +3,7 @@ package cli
 
 import (
 	"code/internal/pathsize"
+	"path/filepath"
 	"context"
 	"errors"
 	"fmt"
@@ -12,21 +13,35 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-// Error: path required.
-var ErrPathRequired = errors.New("path is required")
-
-// ActionLogic processes the CLI command and prints the file/directory size.
-func ActionLogic(ctx context.Context, cmd *cli.Command) error {
-	if cmd.NArg() == 0 {
-		return ErrPathRequired
+func cliArgsParse(cmd *cli.Command) (pathsize.CLIArgs, string, error) {
+	args := cmd.Args().Slice()
+	if len(args) > 1 {
+		return pathsize.CLIArgs{}, "", fmt.Errorf("Error: expected 1 path, got %d. Usage: hexlet-path-size [options] <path>", len(args))
+	} else if len(args) == 0 {
+		return pathsize.CLIArgs{}, "", fmt.Errorf("Error: expected 1 path, got 0. Usage: hexlet-path-size [options] <path>")
 	}
 
-	path := cmd.Args().First()
-	cliArgs := pathsize.Create(
-		cmd.Bool("recursive"),
-		cmd.Bool("all"),
+	path := filepath.Clean(args[0])
+	_, err := os.Stat(path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return pathsize.CLIArgs{}, "", fmt.Errorf("Error: Recived path \"%s\" is not exist", path)
+		}
+		return pathsize.CLIArgs{}, "", fmt.Errorf("Error with recived path \"%s\"", path)
+	}
+
+	return pathsize.Create(
+		cmd.Bool("recursive"), 
+		cmd.Bool("all"), 
 		cmd.Bool("human"),
-	)
+		), path, nil
+}
+
+func ActionLogic(ctx context.Context, cmd *cli.Command) error {
+	cliArgs, path, err := cliArgsParse(cmd)
+	if err != nil {
+		return err
+	}
 
 	result, err := pathsize.Analyze(cliArgs, path)
 	if err != nil {
