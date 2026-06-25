@@ -103,7 +103,6 @@ func Analyze(cliArgs CLIArgs, path string) (int64, error) {
 }
 
 
-
 const (
 	bytesInKB   = 1024
 	roundFactor = 100
