@@ -16,7 +16,7 @@ type CLIArgs struct {
 }
 
 // AnalyzeFile returns the size of a single file at the given path.
-func AnalyzeFile(cliArgs CLIArgs, path string) (int64, error) {
+func analyzeFile(cliArgs CLIArgs, path string) (int64, error) {
 	info, err := os.Stat(path)
 	if err != nil {
 		return 0, err
@@ -58,7 +58,7 @@ func porcessFolder(cliArgs CLIArgs, path string, entry os.DirEntry) (int64, erro
 }
 
 // AnalyzeFolder returns the size of a folder at the given path.
-func AnalyzeFolder(cliArgs CLIArgs, path string) (int64, error) {
+func analyzeFolder(cliArgs CLIArgs, path string) (int64, error) {
 	var totalSize int64
 
 	entries, err := os.ReadDir(path)
@@ -88,9 +88,9 @@ func Analyze(cliArgs CLIArgs, path string) (int64, error) {
 
 	var result int64
 	if !info.IsDir() {
-		result, err = AnalyzeFile(cliArgs, path)
+		result, err = analyzeFile(cliArgs, path)
 	} else {
-		result, err = AnalyzeFolder(cliArgs, path)
+		result, err = analyzeFolder(cliArgs, path)
 	}
 
 	if err != nil {
@@ -107,11 +107,12 @@ const (
 	roundFactor = 100
 )
 
-func Humanity(size int64) string {
-	sizeSuffixes := []string{"B", "KB", "MB", "GB", "TB", "PB", "EB"}
+var sizeSuffixes = []string{"B", "KB", "MB", "GB", "TB", "PB", "EB"}
+
+func humanize(size int64) string {
 	sizeSuffixesIndex := 0
 
-	if size < int64(1024) {
+	if size < int64(bytesInKB) {
 		return fmt.Sprintf("%dB", size)
 	}
 
@@ -130,11 +131,11 @@ func Humanity(size int64) string {
 }
 
 
-func GetFormattedResult(cliArgs CLIArgs, size int64, path string) string {
+func GetHumanFormattedResult(cliArgs CLIArgs, size int64, path string) string {
 	var formattedResult string
 	
 	if cliArgs.Human {
-		formattedResult = Humanity(size)
+		formattedResult = humanize(size)
 	} else {
 		formattedResult = fmt.Sprintf("%dB", size)
 	}
@@ -142,7 +143,7 @@ func GetFormattedResult(cliArgs CLIArgs, size int64, path string) string {
 	if path != "" {
 		return fmt.Sprintf("%s\t%s\n", formattedResult, path)
 	}
-	
+
 	return formattedResult
 	
 }

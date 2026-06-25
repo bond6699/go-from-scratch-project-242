@@ -15,7 +15,7 @@ func GetPathSize(path string, recursive, human, all bool) (string, error) {
 		return "", err
 	}
 
-	formattedResult := pathsize.GetFormattedResult(cliArgs, result, path)
+	formattedResult := pathsize.GetHumanFormattedResult(cliArgs, result, path)
 
 	return formattedResult, nil
 }

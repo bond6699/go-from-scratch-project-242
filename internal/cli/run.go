@@ -36,7 +36,7 @@ func cliArgsParse(cmd *cli.Command) (pathsize.CLIArgs, string, error) {
 	}, path, nil
 }
 
-func ActionLogic(ctx context.Context, cmd *cli.Command) error {
+func actionLogic(ctx context.Context, cmd *cli.Command) error {
 	cliArgs, path, err := cliArgsParse(cmd)
 	if err != nil {
 		return err
@@ -46,7 +46,7 @@ func ActionLogic(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return fmt.Errorf("Error analyzing path %s: %w", path, err)
 	}
-	formattedResult := pathsize.GetFormattedResult(cliArgs, result, path)
+	formattedResult := pathsize.GetHumanFormattedResult(cliArgs, result, path)
 
 	fmt.Println(formattedResult)
 
@@ -74,7 +74,7 @@ func Run() {
 				Usage: "include hidden files and directories (default: false)",
 			},
 		},
-		Action: ActionLogic,
+		Action: actionLogic,
 	}
 
 	err := cmd.Run(context.Background(), os.Args)
