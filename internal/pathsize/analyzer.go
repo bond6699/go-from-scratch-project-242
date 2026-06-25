@@ -91,15 +91,25 @@ func AnalyzeFolder(cliArgs CLIArgs, path string) (int64, error) {
 // Analyze path size.
 func Analyze(cliArgs CLIArgs, path string) (int64, error) {
 	info, err := os.Stat(path)
+	var result int64
 	if err != nil {
 		return 0, err
 	}
 
 	if !info.IsDir() {
-		return AnalyzeFile(cliArgs, path)
+		result = AnalyzeFile(cliArgs, path)
+	} else {
+		result = AnalyzeFolder(cliArgs, path)
 	}
 
-	return AnalyzeFolder(cliArgs, path)
+	var formattedResult string
+	if cliArgs.Human {
+		formattedResult = pathsize.Humanity(result)
+	} else {
+		formattedResult = fmt.Sprintf("%dB", result)
+	}
+
+	return formattedResult, nil
 }
 
 

@@ -45,18 +45,10 @@ func ActionLogic(ctx context.Context, cmd *cli.Command) error {
 
 	result, err := pathsize.Analyze(cliArgs, path)
 	if err != nil {
-		return fmt.Errorf("analyzing path %s: %w", path, err)
+		return fmt.Errorf("Error analyzing path %s: %w", path, err)
 	}
 
-	var formattedResult string
-	if cliArgs.Human {
-		formattedResult = pathsize.Humanity(result)
-	} else {
-		formattedResult = fmt.Sprintf("%dB", result)
-	}
-	
-
-	fmt.Printf("%s\t%s\n", formattedResult, path)
+	fmt.Printf("%s\t%s\n", result, path)
 
 	return nil
 }
