@@ -11,19 +11,9 @@ import (
 
 type CLIArgs struct {
 	Recursive bool
-	Human     bool
 	All       bool
+	Human     bool
 }
-
-// Flags struct getter.
-func Create(recursive, all, human bool) CLIArgs {
-	return CLIArgs{
-		Recursive: recursive,
-		All:       all,
-		Human:     human,
-	}
-}
-
 
 // AnalyzeFile returns the size of a single file at the given path.
 func AnalyzeFile(cliArgs CLIArgs, path string) (int64, error) {
@@ -91,26 +81,25 @@ func AnalyzeFolder(cliArgs CLIArgs, path string) (int64, error) {
 // Analyze path size.
 func Analyze(cliArgs CLIArgs, path string) (int64, error) {
 	info, err := os.Stat(path)
-	var result int64
 	if err != nil {
 		return 0, err
 	}
 
+
+	var result int64
 	if !info.IsDir() {
-		result = AnalyzeFile(cliArgs, path)
+		result, err = AnalyzeFile(cliArgs, path)
 	} else {
-		result = AnalyzeFolder(cliArgs, path)
+		result, err = AnalyzeFolder(cliArgs, path)
 	}
 
-	var formattedResult string
-	if cliArgs.Human {
-		formattedResult = pathsize.Humanity(result)
-	} else {
-		formattedResult = fmt.Sprintf("%dB", result)
+	if err != nil {
+		return 0, err
 	}
 
-	return formattedResult, nil
+	return result, nil
 }
+
 
 
 const (
@@ -138,4 +127,22 @@ func Humanity(size int64) string {
 	}
 
 	return fmt.Sprintf("%.2f%s", result, sizeSuffixes[sizeSuffixesIndex])
+}
+
+
+func GetFormattedResult(cliArgs CLIArgs, size int64, path string) string {
+	var formattedResult string
+	
+	if cliArgs.Human {
+		formattedResult = Humanity(size)
+	} else {
+		formattedResult = fmt.Sprintf("%dB", size)
+	}
+
+	if path != "" {
+		return fmt.Sprintf("%s\t%s\n", formattedResult, path)
+	}
+	
+	return formattedResult
+	
 }

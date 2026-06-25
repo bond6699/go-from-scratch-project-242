@@ -5,7 +5,6 @@ import (
 	"code/internal/pathsize"
 	"path/filepath"
 	"context"
-	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -30,11 +29,11 @@ func cliArgsParse(cmd *cli.Command) (pathsize.CLIArgs, string, error) {
 		return pathsize.CLIArgs{}, "", fmt.Errorf("Error with recived path \"%s\"", path)
 	}
 
-	return pathsize.Create(
-		cmd.Bool("recursive"), 
-		cmd.Bool("all"), 
-		cmd.Bool("human"),
-		), path, nil
+	return pathsize.CLIArgs{
+		Recursive: cmd.Bool("recursive"), 
+		Human: cmd.Bool("human"),
+		All: cmd.Bool("all"), 
+	}, path, nil
 }
 
 func ActionLogic(ctx context.Context, cmd *cli.Command) error {
@@ -47,8 +46,9 @@ func ActionLogic(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return fmt.Errorf("Error analyzing path %s: %w", path, err)
 	}
+	formattedResult := pathsize.GetFormattedResult(cliArgs, result, path)
 
-	fmt.Printf("%s\t%s\n", result, path)
+	fmt.Println(formattedResult)
 
 	return nil
 }
