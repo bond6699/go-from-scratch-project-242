@@ -2,9 +2,7 @@
 package cli
 
 import (
-	"code/internal/analyzer"
-	"code/internal/flags"
-	"code/internal/formatter"
+	"code/internal/pathsize"
 	"context"
 	"errors"
 	"fmt"
@@ -24,18 +22,24 @@ func ActionLogic(ctx context.Context, cmd *cli.Command) error {
 	}
 
 	path := cmd.Args().First()
-	cliflags := flags.Create(
+	cliArgs := pathsize.Create(
 		cmd.Bool("recursive"),
 		cmd.Bool("all"),
 		cmd.Bool("human"),
 	)
 
-	result, err := analyzer.Analyze(cliflags, path)
+	result, err := pathsize.Analyze(cliArgs, path)
 	if err != nil {
 		return fmt.Errorf("analyzing path %s: %w", path, err)
 	}
 
-	formattedResult := formatter.Formatter(cliflags, result)
+	var formattedResult string
+	if cliArgs.Human {
+		formattedResult = pathsize.Humanity(result)
+	} else {
+		formattedResult = fmt.Sprintf("%dB", result)
+	}
+	
 
 	fmt.Printf("%s\t%s\n", formattedResult, path)
 
