@@ -34,12 +34,6 @@ func humanizeSize(size int64) string {
 		sizeSuffixesIndex++
 	}
 
-	/*	
-	if result == float64(int64(result)) {
-		return fmt.Sprintf("%d.0%s", int64(result), sizeSuffixes[sizeSuffixesIndex])
-	}
-	*/
-
 	return fmt.Sprintf("%.2f%s", result, sizeSuffixes[sizeSuffixesIndex])
 }
 
@@ -60,7 +54,6 @@ func GetHumanFormattedResult(cliArgs CLIArgs, size int64, path string) string {
 	return formattedResult
 }
 
-
 // analyzeFile returns the size of a single file at the given path.
 func analyzeFile(path string) (int64, error) {
 	info, err := os.Stat(path)
@@ -69,6 +62,15 @@ func analyzeFile(path string) (int64, error) {
 	}
 
 	return info.Size(), nil
+}
+
+func IsSymLink(path string) (bool, error) {
+	fileInfo, err := os.Lstat(path)
+	if err != nil {
+		return true, err
+	}
+
+	return fileInfo.Mode()&os.ModeSymlink != 0, nil
 }
 
 func isHidden(path string) bool {
@@ -80,6 +82,15 @@ func isHidden(path string) bool {
 // porcessFolder process one DirEntry.
 func porcessFolder(cliArgs CLIArgs, path string, entry os.DirEntry) (int64, error) {
 	fullPath := filepath.Join(path, entry.Name())
+
+	isSumlink, err := IsSymLink(fullPath)
+	if err != nil {
+		return 0, err
+	}
+
+	if isSumlink {
+		return 0, nil
+	}
 
 	if !cliArgs.All && isHidden(fullPath) {
 		return 0, nil
@@ -124,22 +135,23 @@ func analyzeFolder(cliArgs CLIArgs, path string) (int64, error) {
 
 // Analyze path size.
 func Analyze(cliArgs CLIArgs, path string) (int64, error) {
-	info, err := os.Stat(path)
+	info, err := os.Lstat(path)
 	if err != nil {
 		return 0, err
 	}
 
-	var result int64
 	if !info.IsDir() {
-		result, err = analyzeFile(path)
+		isSumlink, err := IsSymLink(path)
+		if err != nil {
+			return 0, err
+		}
+
+		if isSumlink {
+			return 0, nil
+		}
+
+		return analyzeFile(path)
 	} else {
-		result, err = analyzeFolder(cliArgs, path)
+		return analyzeFolder(cliArgs, path)
 	}
-
-	if err != nil {
-		return 0, err
-	}
-
-	return result, nil
 }
-

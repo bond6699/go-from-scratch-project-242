@@ -11,7 +11,6 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-
 // cliArgsParse parse CLI flags ,path and validate path
 func cliArgsParse(cmd *cli.Command) (pathsize.CLIArgs, string, error) {
 	args := cmd.Args().Slice()
@@ -28,7 +27,16 @@ func cliArgsParse(cmd *cli.Command) (pathsize.CLIArgs, string, error) {
 
 	path := filepath.Clean(args[0])
 
-	_, err := os.Stat(path)
+	isSumlink, err := pathsize.IsSymLink(path)
+	if err != nil {
+		return pathsize.CLIArgs{}, "", fmt.Errorf("error get data path %s: %w", path, err)
+	}
+
+	if isSumlink {
+		return pathsize.CLIArgs{}, "", fmt.Errorf("error: Received path \"%s\" is sumlink", path)
+	}
+
+	_, err = os.Lstat(path)
 	if err != nil {
 		if os.IsNotExist(err) {
 			return pathsize.CLIArgs{}, "", fmt.Errorf("error: Received path \"%s\" is not exist", path)
@@ -43,7 +51,6 @@ func cliArgsParse(cmd *cli.Command) (pathsize.CLIArgs, string, error) {
 		All:       cmd.Bool("all"),
 	}, path, nil
 }
-
 
 func actionLogic(ctx context.Context, cmd *cli.Command) error {
 	cliArgs, path, err := cliArgsParse(cmd)
@@ -62,7 +69,6 @@ func actionLogic(ctx context.Context, cmd *cli.Command) error {
 
 	return nil
 }
-
 
 // Run CLI Util.
 func Run() error {
@@ -91,5 +97,6 @@ func Run() error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }

@@ -8,13 +8,13 @@ func TestFormatter(t *testing.T) {
 		size     int64
 		expected string
 	}{
-		{"pathsize/humanizeSize() test1", 25318592, "24.15MB"},
-		{"pathsize/humanizeSize() test2", 2077016, "1.98MB"},
-		{"pathsize/humanizeSize() test3", 7304971, "6.97MB"},
-		{"pathsize/humanizeSize() test4", 7899980, "7.53MB"},
-		{"pathsize/humanizeSize() test5", 12745409, "12.15MB"},
-		{"pathsize/humanizeSize() test6", 120, "120B"},
-		{"pathsize/humanizeSize() test7", 2048, "2.00KB"},
+		{"test1 25318592 -> 24.15MB", 25318592, "24.15MB"},
+		{"test2 2077016 -> 1.98MB", 2077016, "1.98MB"},
+		{"test3 7304971 -> 6.97MB", 7304971, "6.97MB"},
+		{"test4 7899980 -> 7.53MB", 7899980, "7.53MB"},
+		{"test5 12745409 -> 12.15MB", 12745409, "12.15MB"},
+		{"test6 120 -> 120B", 120, "120B"},
+		{"test7 2048 -> 2.00KB", 2048, "2.00KB"},
 	}
 
 	for _, tt := range tests {

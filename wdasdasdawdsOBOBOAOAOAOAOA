@@ -1,0 +1,365 @@
+[33mcommit ab94d5d6e857d0dd488431e54706fdc7df681163[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Sat Jun 27 14:37:22 2026 +0300
+
+    Refactor namings, cli/run.go, pathsize/analyzer.go:humanizeSize
+
+[33mcommit 89c546c56ae7f18f6c78bdbba9503d88547ee2f6[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Thu Jun 25 23:00:09 2026 +0300
+
+    fix lints warnings
+
+[33mcommit 5c75e3b4958612f0d826ccfd5d720d9295c28662[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Thu Jun 25 22:55:31 2026 +0300
+
+    refactoring cli/run.go, pathsize/analyzer.go & rename code.go to pathsize.go as public facade
+
+[33mcommit 095d9f6bede7675c232a5f433df90da4898f378a[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Thu Jun 25 22:54:18 2026 +0300
+
+    refactoring cli/run.go, pathsize/analyzer.go & rename code.go to pathsize.go as public facade
+
+[33mcommit 60f631a98e6cdb8a0085c495c50783e4ae57fde1[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Thu Jun 25 21:48:46 2026 +0300
+
+    Update result formatting pathsize/analyzer.go
+
+[33mcommit fbf26ceec6f6f6fbe5e10cc0504de653b03ca214[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Thu Jun 25 21:22:42 2026 +0300
+
+    Move result formatting from cli/run.go to pathsize/analyzer.go
+
+[33mcommit dbe76e2bd0fca71bae222b2d57732a87ba88a18d[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Thu Jun 25 21:16:37 2026 +0300
+
+    Create CLI Args Parser | cli/run.go:cliArgsParse
+
+[33mcommit a7d365697771dff364c0e0db10f61d5b8752c1ed[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Thu Jun 25 20:23:29 2026 +0300
+
+    Update tests internal/pathsize/analyzer_test.go
+
+[33mcommit 822f535a7cedfcd58bb86c2acebe06b61a1374af[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Thu Jun 25 19:59:14 2026 +0300
+
+    Merge analyzer + flags + formatter => pathsize
+
+[33mcommit 0f47445b2c81d9e8310ce8665c0b7fd374f3814e[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 17:52:09 2026 +0300
+
+    Update README.md
+
+[33mcommit 0bbd0ceb667fd1942ab1b6bc96e1e83c4593318f[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 17:49:32 2026 +0300
+
+    Fix Bugs
+
+[33mcommit f464d810686f5c543b05b6569ae86192af998181[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 17:43:34 2026 +0300
+
+    Fix Bugs
+
+[33mcommit 3a88f522efa3f643d60b742b6a4a7142eeb14a67[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 17:40:03 2026 +0300
+
+    Fix Bugs
+
+[33mcommit 08332d5c5aa97c908569bad21fbca69bec3f60d3[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 17:34:18 2026 +0300
+
+    Fix Bugs
+
+[33mcommit e9cb56b6dd2d1cd3205b1e7dd05755834c688439[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 17:31:38 2026 +0300
+
+    Fix Bugs
+
+[33mcommit 5ca4aed7adbbe4c6c5288324649358064c07f4dd[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 17:23:07 2026 +0300
+
+    Fix Bugs
+
+[33mcommit ca240acb1abd500f7c132d8cbbc8167e6d3abeb1[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 17:18:54 2026 +0300
+
+    Fix Bugs
+
+[33mcommit fbe56da4126474fc537ac9a3766a647a4c8e7f38[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 17:17:31 2026 +0300
+
+    Fix Bugs
+
+[33mcommit ad1eea0271759f49ff81bb19ea412b034ca481b5[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 17:14:16 2026 +0300
+
+    Fix Bugs
+
+[33mcommit c57972a1bd88d16edd00ca53198b5a40e094c7db[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 17:11:12 2026 +0300
+
+    Fix Bugs
+
+[33mcommit 16c082c936743cb0df33febc86940aad0d5dd909[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 17:09:13 2026 +0300
+
+    Fix Bugs
+
+[33mcommit 30bdfe053f40924d4d028c473be4924aa8bb2041[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 16:57:33 2026 +0300
+
+    Fix Bugs
+
+[33mcommit 05b3ee2b10c7fd64de7a916bbff492e07cfd8b76[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 16:51:23 2026 +0300
+
+    Fix Bugs
+
+[33mcommit 2af1276a55de6938fd5bec9a8559069a28662773[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 16:23:07 2026 +0300
+
+    Fix Bugs
+
+[33mcommit 8a2169b38dd0f717d1cb211214213e0946d358f6[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 16:21:27 2026 +0300
+
+    Fix Bugs
+
+[33mcommit 877576cc838b7edafa68ef01afb3b6cd09092f53[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 12:40:53 2026 +0300
+
+    Fix Bugs
+
+[33mcommit 27ca473116d5fd09a2281431094eceeb415cff38[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 12:38:25 2026 +0300
+
+    Fix Bugs
+
+[33mcommit a5458318a57af923af7f1fbd1c80306243632833[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 12:31:41 2026 +0300
+
+    Fix Bugs
+
+[33mcommit f252039ce379e09bfc20b6106950353784c3359f[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 12:21:51 2026 +0300
+
+    Fix Bugs
+
+[33mcommit 9ee26d023b4d086866aab90da6db6ae4ffec6c63[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 12:20:07 2026 +0300
+
+    Fix Bugs
+
+[33mcommit dee3f818c39ea45011c6feb126c5ec5f7b38a7ce[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 12:15:10 2026 +0300
+
+    Fix bugs
+
+[33mcommit fea3e09fc8e3a15912fc5fe1ee4b654c0a43a035[m[33m ([m[1;33mtag: [m[1;33mvBuild831423[m[33m)[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 12:00:09 2026 +0300
+
+    Update README.md
+
+[33mcommit 60ea40778dcf7931bfec6333412e0549240ee2eb[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 22 11:17:37 2026 +0300
+
+    update README.md
+
+[33mcommit 7bff50feda9ec96c96f9569d873ce21b93e6e7e2[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Sun Jun 21 22:12:56 2026 +0300
+
+    update Readme.md
+
+[33mcommit 3d9335bfc1b60f662526a73d3c0e33c3d640a3f4[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Sun Jun 21 22:11:43 2026 +0300
+
+    update Readme.md
+
+[33mcommit abde0897542a5a1bf20b15357bf70e897874bbcc[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Sun Jun 21 21:58:32 2026 +0300
+
+    update .golangci.yml
+
+[33mcommit 9970297872ab6f2e92220736ee8378b15f8cb501[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Sun Jun 21 21:55:40 2026 +0300
+
+    fix all linter warns & update .golangci.yml
+
+[33mcommit e786ce602fc67f6683b0166cc9f2d285cb36ec23[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Sat Jun 20 22:01:59 2026 +0300
+
+    fix lint warns
+
+[33mcommit b963d75032f4dfe2193fe621ed2c97a515f0fa93[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Sat Jun 20 21:58:48 2026 +0300
+
+    pre-lint
+
+[33mcommit 0a1f82b0961bd36ea3fcc76b6db07f2c98832832[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Sat Jun 20 20:44:30 2026 +0300
+
+    Add Readme.md
+
+[33mcommit d0fcfb61061e484ea212714b40d51a5cb5b09ffc[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Sat Jun 20 20:42:22 2026 +0300
+
+    Add Readme.md
+
+[33mcommit 24ee61904a235a89f13e4a03b2dc9c9a3ed6713d[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Sat Jun 20 18:49:40 2026 +0300
+
+    add formatter_test.go
+
+[33mcommit ba3113c35f0bcb68a4cb29bfe40116e22132c467[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Sat Jun 20 12:10:51 2026 +0300
+
+    Add humanity result
+
+[33mcommit d6727213e342fd2f00ceb97bf3407f540fd52f04[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Fri Jun 19 22:23:20 2026 +0300
+
+    general refactoring + tests
+
+[33mcommit 5846f7032ab2d2bd260725e2d7917f8c4d1dc0c3[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Fri Jun 19 22:22:06 2026 +0300
+
+    general refactoring + tests
+
+[33mcommit 9c96449f084c0f63e0ab03c719fbc0d8f9f72eb7[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Fri Jun 19 22:17:19 2026 +0300
+
+    general refactoring + tests
+
+[33mcommit 677dd0148371fa5afef4b1d8ff4bea18f8c13394[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Wed Jun 17 21:12:15 2026 +0300
+
+    wipe
+
+[33mcommit 915afdb6a10e6e5784c74ca930e42edc94db0c0d[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 1 19:44:09 2026 +0300
+
+    ci: add golangci-lint configuration and GitHub Actions workflow
+
+[33mcommit 8447fe78989b9dbe262d6eada4f7b5bd90df3659[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 1 19:40:43 2026 +0300
+
+    ci: add golangci-lint configuration and GitHub Actions workflow
+
+[33mcommit 170ffef9f3ee01fdfebb9376f55e25d6a9616e8e[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 1 19:38:25 2026 +0300
+
+    ci: add golangci-lint configuration and GitHub Actions workflow
+
+[33mcommit a0e6d58fa49b3a484715812bf3311dc1dabd530b[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 1 19:32:27 2026 +0300
+
+    ci: add golangci-lint configuration and GitHub Actions workflow
+
+[33mcommit 5b09c1d52889b73a0589accbea4a4460edc7090b[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 1 19:29:53 2026 +0300
+
+    ci: add golangci-lint configuration and GitHub Actions workflow
+
+[33mcommit b1160206384dd095e479011c1385cb82d98eda48[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 1 19:28:36 2026 +0300
+
+    ci: add golangci-lint configuration and GitHub Actions workflow
+
+[33mcommit 3a196c202eb975418fed08b09bb2afd16bd9bba5[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 1 19:27:35 2026 +0300
+
+    ci: add golangci-lint configuration and GitHub Actions workflow
+
+[33mcommit e1914dbece8148d710c311879250bca6887fba0a[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 1 19:20:27 2026 +0300
+
+    ci: add golangci-lint configuration and GitHub Actions workflow
+
+[33mcommit 1cf90c04e6dd36d0c6258f9369efb0f083bf60bd[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 1 18:56:12 2026 +0300
+
+    update path_size.go
+
+[33mcommit 80d01662735d018c85d7704aaab0a132a81012f0[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Mon Jun 1 11:34:30 2026 +0300
+
+    Add help (-h) command
+
+[33mcommit d83439ec29b633d2d96e0908a9c588bbaa5643ad[m
+Author: bigbo <lomalbtn693301@gmail.com>
+Date:   Sun May 31 20:57:57 2026 +0300
+
+    add Makefile, bin, cmd, path_size.go
+
+[33mcommit afd8275f2b8b3507f905f7f9710f8ed4cb59c4c7[m
+Author: bond6699 <lomalbtn693301@gmail.com>
+Date:   Sun May 31 20:30:59 2026 +0300
+
+    Add README.md
+
+[33mcommit fcc1d768234fda0bcfc8f8b8971ebb4f9874e132[m
+Author: bond6699 <lomalbtn693301@gmail.com>
+Date:   Sun May 31 20:30:58 2026 +0300
+
+    Add README.md
+
+[33mcommit dab72f830ce555fbcc3eea9b2ca8f4147379306a[m
+Author: bond6699 <lomalbtn693301@gmail.com>
+Date:   Sun May 31 20:30:57 2026 +0300
+
+    Add hexlet-check.yml
