@@ -60,7 +60,7 @@ func actionLogic(ctx context.Context, cmd *cli.Command) error {
 
 	formattedResult := pathsize.GetHumanFormattedResult(cliArgs, result, path)
 
-	fmt.Println(formattedResult)
+	fmt.Print(formattedResult)
 
 	return nil
 }
