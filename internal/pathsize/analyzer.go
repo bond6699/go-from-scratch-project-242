@@ -29,7 +29,7 @@ func HumanizeSize(size int64) string {
 	}
 
 	// потому что так требуют тесты
-	if result == float64(int64(result)) {
+	if size == float64(int64(size)) {
 		return fmt.Sprintf("%d.0%s", int64(result), sizeSuffixes[sizeSuffixesIndex])
 	}
 
@@ -47,7 +47,7 @@ func GetHumanFormattedResult(cliArgs CLIArgs, size int64, path string) string {
 	var formattedResult string
 
 	if cliArgs.Human {
-		formattedResult = humanizeSize(size)
+		formattedResult = HumanizeSize(size)
 	} else {
 		formattedResult = fmt.Sprintf("%dB", size)
 	}
