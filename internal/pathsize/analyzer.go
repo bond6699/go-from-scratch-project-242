@@ -21,11 +21,16 @@ var sizeSuffixes = []string{"B", "KB", "MB", "GB", "TB", "PB", "EB"}
 const bytesInKB int64 = 1024
 
 // humanizeSize size(int64) -> format output(string)
-func humanizeSize(size int64) string {
+func HumanizeSize(size int64) string {
 	sizeSuffixesIndex := 0
 
 	if size < bytesInKB {
 		return fmt.Sprintf("%dB", size)
+	}
+
+	// потому что так требуют тесты
+	if result == float64(int64(result)) {
+		return fmt.Sprintf("%d.0%s", int64(result), sizeSuffixes[sizeSuffixesIndex])
 	}
 
 	result := float64(size)
