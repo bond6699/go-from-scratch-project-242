@@ -29,14 +29,15 @@ func HumanizeSize(size int64) string {
 	}
 
 	// потому что так требуют тесты
-	if size == float64(int64(size)) {
-		return fmt.Sprintf("%d.0%s", int64(result), sizeSuffixes[sizeSuffixesIndex])
-	}
 
 	result := float64(size)
 	for result >= float64(bytesInKB) {
 		result /= float64(bytesInKB)
 		sizeSuffixesIndex++
+	}
+
+	if result == float64(int64(result)) {
+		return fmt.Sprintf("%d.0%s", int64(result), sizeSuffixes[sizeSuffixesIndex])
 	}
 
 	return fmt.Sprintf("%.2f%s", result, sizeSuffixes[sizeSuffixesIndex])

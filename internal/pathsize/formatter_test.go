@@ -1,6 +1,8 @@
 package pathsize
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestFormatter(t *testing.T) {
 	tests := []struct {
@@ -14,12 +16,12 @@ func TestFormatter(t *testing.T) {
 		{"test4 7899980 -> 7.53MB", 7899980, "7.53MB"},
 		{"test5 12745409 -> 12.15MB", 12745409, "12.15MB"},
 		{"test6 120 -> 120B", 120, "120B"},
-		{"test7 2048 -> 2.00KB", 2048, "2.00KB"},
+		{"test7 2048 -> 2.0KB", 2048, "2.0KB"},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := humanizeSize(tt.size)
+			got := HumanizeSize(tt.size)
 			if got != tt.expected {
 				t.Errorf("got %s, want %s", got, tt.expected)
 			}
