@@ -5,13 +5,14 @@ import (
 	"code/internal/pathsize"
 	"context"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 
 	"github.com/urfave/cli/v3"
 )
 
+
+// cliArgsParse parse CLI flags ,path and validate path
 func cliArgsParse(cmd *cli.Command) (pathsize.CLIArgs, string, error) {
 	args := cmd.Args().Slice()
 	if len(args) > 1 {
@@ -43,6 +44,7 @@ func cliArgsParse(cmd *cli.Command) (pathsize.CLIArgs, string, error) {
 	}, path, nil
 }
 
+
 func actionLogic(ctx context.Context, cmd *cli.Command) error {
 	cliArgs, path, err := cliArgsParse(cmd)
 	if err != nil {
@@ -61,9 +63,9 @@ func actionLogic(ctx context.Context, cmd *cli.Command) error {
 	return nil
 }
 
-// Run CLI Util.
 
-func Run() {
+// Run CLI Util.
+func Run() error {
 	cmd := &cli.Command{
 		Name:      "hexlet-path-size",
 		Usage:     "print size of a file or directory; supports -r (recursive), -H (human-readable), -a (include hidden)",
@@ -87,6 +89,7 @@ func Run() {
 
 	err := cmd.Run(context.Background(), os.Args)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+	return nil
 }

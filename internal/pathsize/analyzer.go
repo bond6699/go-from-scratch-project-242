@@ -15,6 +15,52 @@ type CLIArgs struct {
 	Human     bool
 }
 
+// sizeSuffixes list all aviable size suffixes
+var sizeSuffixes = []string{"B", "KB", "MB", "GB", "TB", "PB", "EB"}
+
+const bytesInKB int64 = 1024
+
+// humanizeSize size(int64) -> format output(string)
+func humanizeSize(size int64) string {
+	sizeSuffixesIndex := 0
+
+	if size < bytesInKB {
+		return fmt.Sprintf("%dB", size)
+	}
+
+	result := float64(size)
+	for result >= float64(bytesInKB) {
+		result /= float64(bytesInKB)
+		sizeSuffixesIndex++
+	}
+
+	/*	
+	if result == float64(int64(result)) {
+		return fmt.Sprintf("%d.0%s", int64(result), sizeSuffixes[sizeSuffixesIndex])
+	}
+	*/
+
+	return fmt.Sprintf("%.2f%s", result, sizeSuffixes[sizeSuffixesIndex])
+}
+
+// GetHumanFormattedResult wrap humanizeSize with cliArgs & path
+func GetHumanFormattedResult(cliArgs CLIArgs, size int64, path string) string {
+	var formattedResult string
+
+	if cliArgs.Human {
+		formattedResult = humanizeSize(size)
+	} else {
+		formattedResult = fmt.Sprintf("%dB", size)
+	}
+
+	if path != "" {
+		return fmt.Sprintf("%s\t%s\n", formattedResult, path)
+	}
+
+	return formattedResult
+}
+
+
 // analyzeFile returns the size of a single file at the given path.
 func analyzeFile(path string) (int64, error) {
 	info, err := os.Stat(path)
@@ -97,45 +143,3 @@ func Analyze(cliArgs CLIArgs, path string) (int64, error) {
 	return result, nil
 }
 
-const (
-	bytesInKB   = 1024
-	roundFactor = 100
-)
-
-var sizeSuffixes = []string{"B", "KB", "MB", "GB", "TB", "PB", "EB"}
-
-func humanize(size int64) string {
-	sizeSuffixesIndex := 0
-
-	if size < int64(bytesInKB) {
-		return fmt.Sprintf("%dB", size)
-	}
-
-	result := float64(size)
-	for result >= float64(bytesInKB) {
-		result /= bytesInKB
-		sizeSuffixesIndex++
-	}
-
-	if result == float64(int64(result)) {
-		return fmt.Sprintf("%d.0%s", int64(result), sizeSuffixes[sizeSuffixesIndex])
-	}
-
-	return fmt.Sprintf("%.2f%s", result, sizeSuffixes[sizeSuffixesIndex])
-}
-
-func GetHumanFormattedResult(cliArgs CLIArgs, size int64, path string) string {
-	var formattedResult string
-
-	if cliArgs.Human {
-		formattedResult = humanize(size)
-	} else {
-		formattedResult = fmt.Sprintf("%dB", size)
-	}
-
-	if path != "" {
-		return fmt.Sprintf("%s\t%s\n", formattedResult, path)
-	}
-
-	return formattedResult
-}
