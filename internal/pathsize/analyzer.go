@@ -76,6 +76,7 @@ func isHidden(path string) bool {
 	return strings.HasPrefix(base, ".")
 }
 
+//nolint:gocognit,gocyclo,gofumpt // Complexity is acceptable due to multiple skip conditions
 func analyzeFolder(cliArgs CLIArgs, rootPath string) (int64, error) {
 	var totalSize int64
 
@@ -84,12 +85,20 @@ func analyzeFolder(cliArgs CLIArgs, rootPath string) (int64, error) {
 			return fmt.Errorf("cannot access %s: %w", path, err)
 		}
 
-		if IsSymLink(path) || (!cliArgs.All && isHidden(path)) {
-			if d.IsDir() && !cliArgs.All && isHidden(path) {
+		if IsSymLink(path) {
+			return nil
+		}
+
+		if !cliArgs.All && isHidden(path) {
+			if d.IsDir() {
 				return filepath.SkipDir
 			}
 
 			return nil
+		}
+
+		if d.IsDir() && !cliArgs.Recursive && path != rootPath {
+			return filepath.SkipDir
 		}
 
 		if !d.IsDir() {
