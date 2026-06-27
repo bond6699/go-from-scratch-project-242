@@ -3,7 +3,7 @@
 [![hexlet-check](https://github.com/bond6699/go-from-scratch-project-242/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/bond6699/go-from-scratch-project-242/actions/workflows/hexlet-check.yml)
 [![CI](https://github.com/bond6699/go-from-scratch-project-242/actions/workflows/CI.yml/badge.svg)](https://github.com/bond6699/go-from-scratch-project-242/actions/workflows/CI.yml)
 
-Консольная утилита для подсчёта размера файлов и директорий (аналог `du` с расширенными возможностями).  
+Консольная утилита для подсчёта размера файлов и содержимого директорий (аналог `du` с расширенными возможностями).  
 Написана на Go в рамках учебного проекта.
 
 ## Особенности
@@ -13,6 +13,7 @@
 - Вывод размера в байтах или в удобочитаемом формате (B, KB, MB, GB)
 - Обработка больших директорий без переполнения стека (итеративный обход)
 - Код ошибки при некорректном пути или проблемах чтения
+- Ссылки (sumlink) игнорируются
 
 ## Установка
 

@@ -79,58 +79,48 @@ func isHidden(path string) bool {
 	return strings.HasPrefix(base, ".")
 }
 
-// porcessFolder process one DirEntry.
-func porcessFolder(cliArgs CLIArgs, path string, entry os.DirEntry) (int64, error) {
-	fullPath := filepath.Join(path, entry.Name())
 
-	isSumlink, err := IsSymLink(fullPath)
-	if err != nil {
-		return 0, err
-	}
+func analyzeFolder(cliArgs CLIArgs, rootPath string) (int64, error) {
+    var totalSize int64
+    
+    err := filepath.WalkDir(rootPath, func(path string, d os.DirEntry, err error) error {
+        if err != nil {
+            // Возвращаем ошибку, чтобы остановить обход
+            return fmt.Errorf("cannot access %s: %w", path, err)
+        }
+        
+        isSymlink, err := IsSymLink(path)
+        if err != nil {
+            return fmt.Errorf("error checking symlink %s: %w", path, err)
+        }
+        if isSymlink {
+            return nil
+        }
+        
 
-	if isSumlink {
-		return 0, nil
-	}
-
-	if !cliArgs.All && isHidden(fullPath) {
-		return 0, nil
-	}
-
-	if entry.IsDir() {
-		if !cliArgs.Recursive {
-			return 0, nil
-		}
-
-		return analyzeFolder(cliArgs, fullPath)
-	}
-
-	fileInfo, err := entry.Info()
-	if err != nil {
-		return 0, err
-	}
-
-	return fileInfo.Size(), nil
-}
-
-// AnalyzeFolder returns the size of a folder at the given path.
-func analyzeFolder(cliArgs CLIArgs, path string) (int64, error) {
-	var totalSize int64
-
-	entries, err := os.ReadDir(path)
-	if err != nil {
-		return 0, err
-	}
-
-	for _, entry := range entries {
-		size, err := porcessFolder(cliArgs, path, entry)
-		if err != nil {
-			return totalSize, err
-		}
-
-		totalSize += size
-	}
-
-	return totalSize, nil
+        if !cliArgs.All && isHidden(path) {
+            if d.IsDir() {
+                return filepath.SkipDir
+            }
+            return nil
+        }
+        
+        if d.IsDir() && !cliArgs.Recursive && path != rootPath {
+            return filepath.SkipDir
+        }
+        
+        if !d.IsDir() {
+            info, err := d.Info()
+            if err != nil {
+                return fmt.Errorf("cannot get file info for %s: %w", path, err)
+            }
+            totalSize += info.Size()
+        }
+        
+        return nil
+    })
+    
+    return totalSize, err
 }
 
 // Analyze path size.
