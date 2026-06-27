@@ -64,13 +64,10 @@ func analyzeFile(path string) (int64, error) {
 	return info.Size(), nil
 }
 
-func IsSymLink(path string) (bool, error) {
-	fileInfo, err := os.Lstat(path)
-	if err != nil {
-		return true, err
-	}
+func IsSymLink(path string) bool {
+	fileInfo, _ := os.Lstat(path)
 
-	return fileInfo.Mode()&os.ModeSymlink != 0, nil
+	return fileInfo.Mode()&os.ModeSymlink != 0
 }
 
 func isHidden(path string) bool {
@@ -79,48 +76,35 @@ func isHidden(path string) bool {
 	return strings.HasPrefix(base, ".")
 }
 
-
 func analyzeFolder(cliArgs CLIArgs, rootPath string) (int64, error) {
-    var totalSize int64
-    
-    err := filepath.WalkDir(rootPath, func(path string, d os.DirEntry, err error) error {
-        if err != nil {
-            // Возвращаем ошибку, чтобы остановить обход
-            return fmt.Errorf("cannot access %s: %w", path, err)
-        }
-        
-        isSymlink, err := IsSymLink(path)
-        if err != nil {
-            return fmt.Errorf("error checking symlink %s: %w", path, err)
-        }
-        if isSymlink {
-            return nil
-        }
-        
+	var totalSize int64
 
-        if !cliArgs.All && isHidden(path) {
-            if d.IsDir() {
-                return filepath.SkipDir
-            }
-            return nil
-        }
-        
-        if d.IsDir() && !cliArgs.Recursive && path != rootPath {
-            return filepath.SkipDir
-        }
-        
-        if !d.IsDir() {
-            info, err := d.Info()
-            if err != nil {
-                return fmt.Errorf("cannot get file info for %s: %w", path, err)
-            }
-            totalSize += info.Size()
-        }
-        
-        return nil
-    })
-    
-    return totalSize, err
+	err := filepath.WalkDir(rootPath, func(path string, d os.DirEntry, err error) error {
+		if err != nil {
+			return fmt.Errorf("cannot access %s: %w", path, err)
+		}
+
+		if IsSymLink(path) || (!cliArgs.All && isHidden(path)) {
+			if d.IsDir() && !cliArgs.All && isHidden(path) {
+				return filepath.SkipDir
+			}
+
+			return nil
+		}
+
+		if !d.IsDir() {
+			info, err := d.Info()
+			if err != nil {
+				return fmt.Errorf("cannot get file info for %s: %w", path, err)
+			}
+
+			totalSize += info.Size()
+		}
+
+		return nil
+	})
+
+	return totalSize, err
 }
 
 // Analyze path size.
@@ -131,12 +115,7 @@ func Analyze(cliArgs CLIArgs, path string) (int64, error) {
 	}
 
 	if !info.IsDir() {
-		isSumlink, err := IsSymLink(path)
-		if err != nil {
-			return 0, err
-		}
-
-		if isSumlink {
+		if IsSymLink(path) {
 			return 0, nil
 		}
 

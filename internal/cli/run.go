@@ -27,22 +27,17 @@ func cliArgsParse(cmd *cli.Command) (pathsize.CLIArgs, string, error) {
 
 	path := filepath.Clean(args[0])
 
-	isSumlink, err := pathsize.IsSymLink(path)
-	if err != nil {
-		return pathsize.CLIArgs{}, "", fmt.Errorf("error get data path %s: %w", path, err)
-	}
-
-	if isSumlink {
-		return pathsize.CLIArgs{}, "", fmt.Errorf("error: Received path \"%s\" is sumlink", path)
-	}
-
-	_, err = os.Lstat(path)
+	_, err := os.Lstat(path)
 	if err != nil {
 		if os.IsNotExist(err) {
 			return pathsize.CLIArgs{}, "", fmt.Errorf("error: Received path \"%s\" is not exist", path)
 		}
 
 		return pathsize.CLIArgs{}, "", fmt.Errorf("error with received path \"%s\"", path)
+	}
+
+	if pathsize.IsSymLink(path) {
+		return pathsize.CLIArgs{}, "", fmt.Errorf("error: Received path \"%s\" is sumlink", path)
 	}
 
 	return pathsize.CLIArgs{
