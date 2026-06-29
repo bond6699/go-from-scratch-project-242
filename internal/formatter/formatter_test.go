@@ -1,4 +1,4 @@
-package pathsize
+package formatter
 
 import (
 	"testing"

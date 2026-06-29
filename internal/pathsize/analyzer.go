@@ -17,49 +17,7 @@ type Options struct {
 }
 
 // sizeSuffixes list all aviable size suffixes
-var sizeSuffixes = []string{"B", "KB", "MB", "GB", "TB", "PB", "EB"}
 
-const bytesInKB int64 = 1024
-
-// humanizeSize size(int64) -> format output(string)
-func HumanizeSize(size int64) string {
-	sizeSuffixesIndex := 0
-
-	if size < bytesInKB {
-		return fmt.Sprintf("%dB", size)
-	}
-
-	// потому что так требуют тесты
-
-	result := float64(size)
-	for result >= float64(bytesInKB) {
-		result /= float64(bytesInKB)
-		sizeSuffixesIndex++
-	}
-
-	if result == float64(int64(result)) {
-		return fmt.Sprintf("%d.0%s", int64(result), sizeSuffixes[sizeSuffixesIndex])
-	}
-
-	return fmt.Sprintf("%.2f%s", result, sizeSuffixes[sizeSuffixesIndex])
-}
-
-// GetHumanFormattedResult wrap humanizeSize with cliArgs & path
-func GetHumanFormattedResult(human bool, size int64, path string) string {
-	var formattedResult string
-
-	if human {
-		formattedResult = HumanizeSize(size)
-	} else {
-		formattedResult = fmt.Sprintf("%dB", size)
-	}
-
-	if path != "" {
-		return fmt.Sprintf("%s\t%s\n", formattedResult, path)
-	}
-
-	return formattedResult
-}
 
 // analyzeFile returns the size of a single file at the given path.
 func analyzeFile(path string) (int64, error) {
@@ -91,8 +49,6 @@ func analyzeFolder(recursive, all bool, rootPath string) (int64, error) {
 			return err
 		}
 
-		fmt.Println(realPath, path)
-
 		if realPath != path {
 			path = realPath
 		}
@@ -116,7 +72,6 @@ func analyzeFolder(recursive, all bool, rootPath string) (int64, error) {
 			}
 
 			totalSize += info.Size()
-			fmt.Println(realPath, path, info.Size())
 		}
 
 		return nil

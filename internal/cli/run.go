@@ -3,6 +3,7 @@ package cli
 
 import (
 	"code/internal/pathsize"
+	"code/internal/formatter"
 	"context"
 	"fmt"
 	"os"
@@ -55,7 +56,7 @@ func actionLogic(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("error analyzing path %s: %w", options.Path, err)
 	}
 
-	formattedResult := pathsize.GetHumanFormattedResult(options.Human, result, options.Path)
+	formattedResult := formatter.GetHumanFormattedResult(options.Human, result, options.Path)
 
 	fmt.Print(formattedResult)
 

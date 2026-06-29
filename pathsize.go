@@ -2,6 +2,7 @@ package code
 
 import (
 	"code/internal/pathsize"
+	"code/internal/formatter"
 )
 
 // GetPathSize возвращает человекочитаемый размер пути в виде строки.
@@ -11,7 +12,7 @@ func GetPathSize(path string, recursive, all bool) (string, error) {
 		return "", err
 	}
 
-	formattedResult := pathsize.HumanizeSize(result)
+	formattedResult := formatter.HumanizeSize(result)
 
 	return formattedResult, nil
 }
