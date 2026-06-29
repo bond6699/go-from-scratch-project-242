@@ -5,6 +5,8 @@ import (
 	"path/filepath"
 	"runtime"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func getProjectRoot() string {
@@ -20,71 +22,122 @@ func TestAnalyzer(t *testing.T) {
 	root := getProjectRoot()
 	tests := []struct {
 		name     string
-		flags    CLIArgs
-		path     string
+		options  Options
 		expected int64
+		err      error
 	}{
 		{
-			"pathsize/Analyze() test1 Default ( Recursive false, All false )",
-			CLIArgs{false, false, false},
-			filepath.Join(root, "tests", "test1_base"), 25318592,
+			"pathsize/Analyze() Default",
+			Options{
+				Recursive: false,
+				All:       false,
+				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "base"),
+			},
+			25318592, nil,
 		},
 		{
-			"pathsize/Analyze() test2 | Folder without recursive ( Recursive false, All false ) ",
-			CLIArgs{false, false, false},
-			filepath.Join(root, "tests", "test2_with_folders"), 2077016,
+			"pathsize/Analyze() Folder without recursive",
+			Options{
+				Recursive: false,
+				All:       false,
+				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "with_folders"),
+			},
+			2077016, nil,
 		},
 		{
-			"pathsize/Analyze() test3 | Folder with recursive ( Recursive true, All false )",
-			CLIArgs{true, false, false},
-			filepath.Join(root, "tests", "test2_with_folders"), 7304971,
+			"pathsize/Analyze() Folder with recursive",
+			Options{
+				Recursive: true,
+				All:       false,
+				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "with_folders"),
+			},
+			7304971, nil,
 		},
 		{
-			"pathsize/Analyze() test4 | Folder without recursive, with hidden files ( Recursive false, All true )",
-			CLIArgs{false, true, false},
-			filepath.Join(root, "tests", "test3_with_hidden_files_and_folders"), 466268,
+			"pathsize/Analyze() Folder without recursive, with hidden files",
+			Options{
+				Recursive: false,
+				All:       true,
+				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "with_hidden_files_and_folders"),
+			},
+			466268, nil,
 		},
 		{
-			"pathsize/Analyze() test5 | Folder without recursive, without hidden files ( Recursive true, All false )",
-			CLIArgs{true, false, false},
-			filepath.Join(root, "tests", "test3_with_hidden_files_and_folders"), 439,
+			"pathsize/Analyze() Folder without recursive, without hidden files",
+			Options{
+				Recursive: true,
+				All:       false,
+				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "with_hidden_files_and_folders"),
+			},
+			439, nil,
 		},
 		{
-			"pathsize/Analyze() test6 | Folder with recursive and hidden files ( Recursive true, All true )",
-			CLIArgs{true, true, false},
-			filepath.Join(root, "tests", "test3_with_hidden_files_and_folders"), 4845982,
+			"pathsize/Analyze() Folder with recursive and hidden files",
+			Options{
+				Recursive: true,
+				All:       true,
+				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "with_hidden_files_and_folders"),
+			},
+			4845982, nil,
 		},
 		{
-			"pathsize/Analyze() test7 | File path ( Default => All true, Recursive false )",
-			CLIArgs{false, true, false},
-			filepath.Join(root, "tests", "test3_with_hidden_files_and_folders", "file2.dll"), 38,
+			"pathsize/Analyze() File path",
+			Options{
+				Recursive: false,
+				All:       true,
+				Path: filepath.Join(
+					root,
+					"internal",
+					"pathsize",
+					"testdata",
+					"with_hidden_files_and_folders",
+					"file2.dll",
+				),
+			},
+			325,
+			nil,
 		},
 		{
-			"pathsize/Analyze() test8 | Hidden File path ( Default => All true, Recursive false )",
-			CLIArgs{false, true, false},
-			filepath.Join(root, "tests", "test3_with_hidden_files_and_folders", ".file1.dll"), 465905,
+			"pathsize/Analyze() Hidden File path",
+			Options{
+				Recursive: false,
+				All:       true,
+				Path: filepath.Join(
+					root,
+					"internal",
+					"pathsize",
+					"testdata",
+					"with_hidden_files_and_folders",
+					".hidden_file.dll",
+				),
+			},
+			465905,
+			nil,
 		},
 		{
-			"pathsize/Analyze() test9 | Symlink File path ( All false, Recursive false )",
-			CLIArgs{false, false, false},
-			filepath.Join(root, "tests", "test4_symlink", "file_symlink.dll"), 0,
+			"pathsize/Analyze() Symlink File path",
+			Options{
+				Recursive: false,
+				All:       false,
+				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "symlink", "file_symlink.dll"),
+			},
+			325, nil,
 		},
 		{
-			"pathsize/Analyze() test10 | Folder with Symlink file ( All false, Recursive false )",
-			CLIArgs{false, false, false},
-			filepath.Join(root, "tests", "test4_symlink"), 363,
+			"pathsize/Analyze() Folder with Symlink file",
+			Options{
+				Recursive: false,
+				All:       false,
+				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "symlink"),
+			},
+			688, nil,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, _ := Analyze(tt.flags, tt.path)
-			if got != tt.expected {
-				t.Errorf(
-					"got %d, want %d for path %q with flags %+v",
-					got, tt.expected, tt.path, tt.flags,
-				)
-			}
+			got, _ := Analyze(tt.options.Recursive, tt.options.All, tt.options.Path)
+			assert.Equal(t, tt.expected, got, "path: %s", tt.options.Path)
 		})
 	}
 }

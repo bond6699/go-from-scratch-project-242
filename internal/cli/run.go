@@ -12,15 +12,15 @@ import (
 )
 
 // cliArgsParse parse CLI flags ,path and validate path
-func cliArgsParse(cmd *cli.Command) (pathsize.CLIArgs, string, error) {
+func cliArgsParse(cmd *cli.Command) (pathsize.Options, error) {
 	args := cmd.Args().Slice()
 	if len(args) > 1 {
-		return pathsize.CLIArgs{}, "", fmt.Errorf(
+		return pathsize.Options{}, fmt.Errorf(
 			"error: expected 1 path, got %d. Usage: hexlet-path-size [options] <path>",
 			len(args),
 		)
 	} else if len(args) == 0 {
-		return pathsize.CLIArgs{}, "", fmt.Errorf(
+		return pathsize.Options{}, fmt.Errorf(
 			"error: expected 1 path, got 0. Usage: hexlet-path-size [options] <path>",
 		)
 	}
@@ -30,35 +30,32 @@ func cliArgsParse(cmd *cli.Command) (pathsize.CLIArgs, string, error) {
 	_, err := os.Lstat(path)
 	if err != nil {
 		if os.IsNotExist(err) {
-			return pathsize.CLIArgs{}, "", fmt.Errorf("error: Received path \"%s\" is not exist", path)
+			return pathsize.Options{}, fmt.Errorf("error: Received path \"%s\" is not exist", path)
 		}
 
-		return pathsize.CLIArgs{}, "", fmt.Errorf("error with received path \"%s\"", path)
+		return pathsize.Options{}, fmt.Errorf("error with received path \"%s\"", path)
 	}
 
-	if pathsize.IsSymLink(path) {
-		return pathsize.CLIArgs{}, "", fmt.Errorf("error: Received path \"%s\" is sumlink", path)
-	}
-
-	return pathsize.CLIArgs{
+	return pathsize.Options{
 		Recursive: cmd.Bool("recursive"),
 		Human:     cmd.Bool("human"),
 		All:       cmd.Bool("all"),
-	}, path, nil
+		Path:      path,
+	}, nil
 }
 
 func actionLogic(ctx context.Context, cmd *cli.Command) error {
-	cliArgs, path, err := cliArgsParse(cmd)
+	options, err := cliArgsParse(cmd)
 	if err != nil {
 		return err
 	}
 
-	result, err := pathsize.Analyze(cliArgs, path)
+	result, err := pathsize.Analyze(options.Recursive, options.All, options.Path)
 	if err != nil {
-		return fmt.Errorf("error analyzing path %s: %w", path, err)
+		return fmt.Errorf("error analyzing path %s: %w", options.Path, err)
 	}
 
-	formattedResult := pathsize.GetHumanFormattedResult(cliArgs, result, path)
+	formattedResult := pathsize.GetHumanFormattedResult(options.Human, result, options.Path)
 
 	fmt.Print(formattedResult)
 

@@ -9,10 +9,11 @@ import (
 	"strings"
 )
 
-type CLIArgs struct {
+type Options struct {
 	Recursive bool
 	All       bool
 	Human     bool
+	Path      string
 }
 
 // sizeSuffixes list all aviable size suffixes
@@ -44,10 +45,10 @@ func HumanizeSize(size int64) string {
 }
 
 // GetHumanFormattedResult wrap humanizeSize with cliArgs & path
-func GetHumanFormattedResult(cliArgs CLIArgs, size int64, path string) string {
+func GetHumanFormattedResult(human bool, size int64, path string) string {
 	var formattedResult string
 
-	if cliArgs.Human {
+	if human {
 		formattedResult = HumanizeSize(size)
 	} else {
 		formattedResult = fmt.Sprintf("%dB", size)
@@ -70,12 +71,6 @@ func analyzeFile(path string) (int64, error) {
 	return info.Size(), nil
 }
 
-func IsSymLink(path string) bool {
-	fileInfo, _ := os.Lstat(path)
-
-	return fileInfo.Mode()&os.ModeSymlink != 0
-}
-
 func isHidden(path string) bool {
 	base := filepath.Base(path)
 
@@ -83,7 +78,7 @@ func isHidden(path string) bool {
 }
 
 //nolint:gocognit,gocyclo,gofumpt // Complexity is acceptable due to multiple skip conditions
-func analyzeFolder(cliArgs CLIArgs, rootPath string) (int64, error) {
+func analyzeFolder(recursive, all bool, rootPath string) (int64, error) {
 	var totalSize int64
 
 	err := filepath.WalkDir(rootPath, func(path string, d os.DirEntry, err error) error {
@@ -91,11 +86,18 @@ func analyzeFolder(cliArgs CLIArgs, rootPath string) (int64, error) {
 			return fmt.Errorf("cannot access %s: %w", path, err)
 		}
 
-		if IsSymLink(path) {
-			return nil
+		realPath, err := filepath.EvalSymlinks(path)
+		if err != nil {
+			return err
 		}
 
-		if !cliArgs.All && isHidden(path) {
+		fmt.Println(realPath, path)
+
+		if realPath != path {
+			path = realPath
+		}
+
+		if !all && isHidden(path) {
 			if d.IsDir() {
 				return filepath.SkipDir
 			}
@@ -103,17 +105,18 @@ func analyzeFolder(cliArgs CLIArgs, rootPath string) (int64, error) {
 			return nil
 		}
 
-		if d.IsDir() && !cliArgs.Recursive && path != rootPath {
+		if d.IsDir() && !recursive && path != rootPath {
 			return filepath.SkipDir
 		}
 
 		if !d.IsDir() {
-			info, err := d.Info()
+			info, err := os.Stat(path)
 			if err != nil {
 				return fmt.Errorf("cannot get file info for %s: %w", path, err)
 			}
 
 			totalSize += info.Size()
+			fmt.Println(realPath, path, info.Size())
 		}
 
 		return nil
@@ -123,19 +126,24 @@ func analyzeFolder(cliArgs CLIArgs, rootPath string) (int64, error) {
 }
 
 // Analyze path size.
-func Analyze(cliArgs CLIArgs, path string) (int64, error) {
-	info, err := os.Lstat(path)
+func Analyze(recursive, all bool, path string) (int64, error) {
+	realPath, err := filepath.EvalSymlinks(path)
+	if err != nil {
+		return 0, err
+	}
+
+	if realPath != path {
+		path = realPath
+	}
+
+	info, err := os.Stat(path)
 	if err != nil {
 		return 0, err
 	}
 
 	if !info.IsDir() {
-		if IsSymLink(path) {
-			return 0, nil
-		}
-
 		return analyzeFile(path)
 	} else {
-		return analyzeFolder(cliArgs, path)
+		return analyzeFolder(recursive, all, path)
 	}
 }

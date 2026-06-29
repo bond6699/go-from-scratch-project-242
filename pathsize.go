@@ -5,12 +5,8 @@ import (
 )
 
 // GetPathSize возвращает человекочитаемый размер пути в виде строки.
-// Рекурсивно обрабатывает директории, игнорирует скрытые файлы.
-func GetPathSize(path string, recursive, human, all bool) (string, error) {
-	// Устанавливаем флаги: recursive=true, human=true, all=false
-	cliArgs := pathsize.CLIArgs{Recursive: recursive, All: all, Human: human}
-
-	result, err := pathsize.Analyze(cliArgs, path)
+func GetPathSize(path string, recursive, all bool) (string, error) {
+	result, err := pathsize.Analyze(recursive, all, path)
 	if err != nil {
 		return "", err
 	}
