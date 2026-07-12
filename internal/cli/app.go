@@ -2,39 +2,34 @@
 package cli
 
 import (
-	"code/internal/pathsize"
 	"code/internal/formatter"
+	"code/internal/pathsize"
+	internal_errors "code/internal/errors"
 	"context"
 	"fmt"
 	"os"
 	"path/filepath"
-
 	"github.com/urfave/cli/v3"
 )
 
-// cliArgsParse parse CLI flags ,path and validate path
-func cliArgsParse(cmd *cli.Command) (pathsize.Options, error) {
-	args := cmd.Args().Slice()
-	if len(args) > 1 {
-		return pathsize.Options{}, fmt.Errorf(
-			"error: expected 1 path, got %d. Usage: hexlet-path-size [options] <path>",
-			len(args),
-		)
-	} else if len(args) == 0 {
-		return pathsize.Options{}, fmt.Errorf(
-			"error: expected 1 path, got 0. Usage: hexlet-path-size [options] <path>",
-		)
-	}
-
-	path := filepath.Clean(args[0])
-
+func validatePath(path string) error {
 	_, err := os.Lstat(path)
 	if err != nil {
-		if os.IsNotExist(err) {
-			return pathsize.Options{}, fmt.Errorf("error: Received path \"%s\" is not exist", path)
-		}
+		return fmt.Errorf("path %q: %w", path, internal_errors.ErrInvalidPath)
+	}
+	return nil
+}
 
-		return pathsize.Options{}, fmt.Errorf("error with received path \"%s\"", path)
+// cliArgsParse parse CLI flags ,path and validate path
+func parseOptions(cmd *cli.Command) (pathsize.Options, error) {
+	if cmd.NArg() != 1 {
+		return pathsize.Options{}, internal_errors.ErrPathArgsNotProvided
+	}
+
+	path := filepath.Clean(cmd.Args().Get(0))
+	err := validatePath(path)
+	if err != nil {
+		return pathsize.Options{}, err
 	}
 
 	return pathsize.Options{
@@ -46,26 +41,28 @@ func cliArgsParse(cmd *cli.Command) (pathsize.Options, error) {
 }
 
 func actionLogic(ctx context.Context, cmd *cli.Command) error {
-	options, err := cliArgsParse(cmd)
+	options, err := parseOptions(cmd)
 	if err != nil {
 		return err
 	}
 
 	result, err := pathsize.Analyze(options.Recursive, options.All, options.Path)
 	if err != nil {
-		return fmt.Errorf("error analyzing path %s: %w", options.Path, err)
+		return err
 	}
 
-	formattedResult := formatter.GetHumanFormattedResult(options.Human, result, options.Path)
-
-	fmt.Print(formattedResult)
+	fmt.Println(formatter.GetHumanFormattedResult(
+		options.Human, 
+		result, 
+		options.Path,
+	)) 
 
 	return nil
 }
 
 // Run CLI Util.
-func Run() error {
-	cmd := &cli.Command{
+func CreateApp() *cli.Command {
+	app := &cli.Command{
 		Name:      "hexlet-path-size",
 		Usage:     "print size of a file or directory; supports -r (recursive), -H (human-readable), -a (include hidden)",
 		UsageText: "hexlet-path-size [global options] <path>",
@@ -86,10 +83,6 @@ func Run() error {
 		Action: actionLogic,
 	}
 
-	err := cmd.Run(context.Background(), os.Args)
-	if err != nil {
-		return err
-	}
+	return app
 
-	return nil
 }

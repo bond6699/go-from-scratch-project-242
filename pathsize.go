@@ -1,8 +1,8 @@
 package code
 
 import (
-	"code/internal/pathsize"
 	"code/internal/formatter"
+	"code/internal/pathsize"
 )
 
 // GetPathSize возвращает человекочитаемый размер пути в виде строки.

@@ -14,7 +14,7 @@ func HumanizeSize(size int64) string {
 
 	result := float64(size)
 
-	for index := range sizeSuffixes{
+	for index := range sizeSuffixes {
 		if result >= float64(unitBase) {
 			result /= float64(unitBase)
 			continue
@@ -28,8 +28,8 @@ func HumanizeSize(size int64) string {
 	}
 
 	if result == float64(int64(result)) {
-			return fmt.Sprintf("%.1f%s", result, sizeSuffixes[len(sizeSuffixes)-1])
-		}
+		return fmt.Sprintf("%.1f%s", result, sizeSuffixes[len(sizeSuffixes)-1])
+	}
 
 	return fmt.Sprintf("%.2f%s", result, sizeSuffixes[len(sizeSuffixes)-1])
 }
@@ -41,11 +41,11 @@ func GetHumanFormattedResult(human bool, size int64, path string) string {
 	if human {
 		formattedResult = HumanizeSize(size)
 	} else {
-		formattedResult = fmt.Sprintf("%dB", size)
+		formattedResult = fmt.Sprintf("%d%s", size, sizeSuffixes[0])
 	}
 
 	if path != "" {
-		return fmt.Sprintf("%s\t%s\n", formattedResult, path)
+		return fmt.Sprintf("%s\t%s", formattedResult, path)
 	}
 
 	return formattedResult

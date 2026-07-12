@@ -3,6 +3,7 @@
 package pathsize
 
 import (
+	internal_errors "code/internal/errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -18,12 +19,11 @@ type Options struct {
 
 // sizeSuffixes list all aviable size suffixes
 
-
 // analyzeFile returns the size of a single file at the given path.
 func analyzeFile(path string) (int64, error) {
 	info, err := os.Stat(path)
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("%w: %s %w", internal_errors.ErrReadPath, path, err)
 	}
 
 	return info.Size(), nil
@@ -41,12 +41,12 @@ func analyzeFolder(recursive, all bool, rootPath string) (int64, error) {
 
 	err := filepath.WalkDir(rootPath, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
-			return fmt.Errorf("cannot access %s: %w", path, err)
+			return fmt.Errorf("%w: %s %w", internal_errors.ErrAccessDenied, path, err)
 		}
 
 		realPath, err := filepath.EvalSymlinks(path)
 		if err != nil {
-			return err
+			return internal_errors.ErrSymslinkRead
 		}
 
 		if realPath != path {
@@ -68,7 +68,7 @@ func analyzeFolder(recursive, all bool, rootPath string) (int64, error) {
 		if !d.IsDir() {
 			info, err := os.Stat(path)
 			if err != nil {
-				return fmt.Errorf("cannot get file info for %s: %w", path, err)
+				return fmt.Errorf("%w: %s %w", internal_errors.ErrReadPath, path, err)
 			}
 
 			totalSize += info.Size()
@@ -82,18 +82,13 @@ func analyzeFolder(recursive, all bool, rootPath string) (int64, error) {
 
 // Analyze path size.
 func Analyze(recursive, all bool, path string) (int64, error) {
-	realPath, err := filepath.EvalSymlinks(path)
-	if err != nil {
-		return 0, err
-	}
-
-	if realPath != path {
+	if realPath, err := filepath.EvalSymlinks(path); err == nil {
 		path = realPath
 	}
 
 	info, err := os.Stat(path)
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("%w: %s %w", internal_errors.ErrReadPath, path, err)
 	}
 
 	if !info.IsDir() {
