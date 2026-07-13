@@ -2,11 +2,13 @@ package pathsize
 
 import (
 	"log"
+	"os"
 	"path/filepath"
 	"runtime"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func getProjectRoot() string {
@@ -16,6 +18,20 @@ func getProjectRoot() string {
 	}
 
 	return filepath.Join(filepath.Dir(filename), "..", "..")
+}
+
+func TestPermissionDenied(t *testing.T) {
+	tempDir := t.TempDir()
+
+	require.NoError(t, os.Chmod(tempDir, 0o000), "не удалось установить права 000")
+
+	t.Cleanup(func() {
+		_ = os.Chmod(tempDir, 0o0700)
+	})
+
+	result, err := Analyze(false, false, tempDir)
+	assert.Equal(t, int64(0), result)
+	assert.ErrorIs(t, err, errAccessDenied)
 }
 
 func TestAnalyzer(t *testing.T) {
@@ -159,16 +175,6 @@ func TestAnalyzer(t *testing.T) {
 			},
 			expected:    0,
 			expectedErr: errInvalidPath,
-		},
-		{
-			name: "pathsize/Analyze() Access denied",
-			options: Options{
-				Recursive: false,
-				All:       false,
-				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "access_denied"),
-			},
-			expected:    0,
-			expectedErr: errAccessDenied,
 		},
 		{
 			name: "pathsize/Analyze() Empty folder with empty file",
