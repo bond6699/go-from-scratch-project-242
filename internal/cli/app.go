@@ -36,7 +36,6 @@ func actionLogic(ctx context.Context, cmd *cli.Command) error {
 
 	result, err := pathsize.Analyze(options.Recursive, options.All, options.Path)
 	if err != nil {
-		_ = cli.ShowRootCommandHelp(cmd)
 		return err
 	}
 

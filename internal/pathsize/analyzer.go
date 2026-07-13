@@ -23,9 +23,12 @@ func isHidden(path string) bool {
 func analyzeFolder(recursive, all bool, rootPath string) (int64, error) {
 	var totalSize int64
 
-	rootPath, _ = filepath.EvalSymlinks(rootPath)
+	rootPath, err := filepath.EvalSymlinks(rootPath)
+	if err != nil {
+		return 0, mapPathError(rootPath, err)
+	}
 
-	err := filepath.WalkDir(rootPath, func(path string, d os.DirEntry, err error) error {
+	err = filepath.WalkDir(rootPath, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
 			return mapPathError(path, err)
 		}
@@ -70,7 +73,7 @@ func Analyze(recursive, all bool, path string) (int64, error) {
 
 	if !info.IsDir() {
 		return info.Size(), nil
-	} else {
-		return analyzeFolder(recursive, all, path)
-	}
+	} 
+	
+	return analyzeFolder(recursive, all, path)
 }
