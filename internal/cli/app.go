@@ -4,39 +4,24 @@ package cli
 import (
 	"code/internal/formatter"
 	"code/internal/pathsize"
-	internal_errors "code/internal/errors"
 	"context"
+	"errors"
 	"fmt"
-	"os"
-	"path/filepath"
 	"github.com/urfave/cli/v3"
 )
 
-func validatePath(path string) error {
-	_, err := os.Lstat(path)
-	if err != nil {
-		return fmt.Errorf("path %q: %w", path, internal_errors.ErrInvalidPath)
-	}
-	return nil
-}
+var errPathArgsNotProvided = errors.New("path argument not provided, only one path argument is allowed")
 
-// cliArgsParse parse CLI flags ,path and validate path
 func parseOptions(cmd *cli.Command) (pathsize.Options, error) {
 	if cmd.NArg() != 1 {
-		return pathsize.Options{}, internal_errors.ErrPathArgsNotProvided
-	}
-
-	path := filepath.Clean(cmd.Args().Get(0))
-	err := validatePath(path)
-	if err != nil {
-		return pathsize.Options{}, err
+		return pathsize.Options{}, errPathArgsNotProvided
 	}
 
 	return pathsize.Options{
 		Recursive: cmd.Bool("recursive"),
 		Human:     cmd.Bool("human"),
 		All:       cmd.Bool("all"),
-		Path:      path,
+		Path:      cmd.Args().Get(0),
 	}, nil
 }
 
@@ -60,7 +45,6 @@ func actionLogic(ctx context.Context, cmd *cli.Command) error {
 	return nil
 }
 
-// Run CLI Util.
 func CreateApp() *cli.Command {
 	app := &cli.Command{
 		Name:      "hexlet-path-size",

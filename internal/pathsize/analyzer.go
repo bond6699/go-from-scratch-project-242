@@ -3,9 +3,8 @@
 package pathsize
 
 import (
-	internal_errors "code/internal/errors"
-	"fmt"
 	"os"
+	"io/fs"
 	"path/filepath"
 	"strings"
 )
@@ -17,22 +16,8 @@ type Options struct {
 	Path      string
 }
 
-// sizeSuffixes list all aviable size suffixes
-
-// analyzeFile returns the size of a single file at the given path.
-func analyzeFile(path string) (int64, error) {
-	info, err := os.Stat(path)
-	if err != nil {
-		return 0, fmt.Errorf("%w: %s %w", internal_errors.ErrReadPath, path, err)
-	}
-
-	return info.Size(), nil
-}
-
 func isHidden(path string) bool {
-	base := filepath.Base(path)
-
-	return strings.HasPrefix(base, ".")
+	return strings.HasPrefix(filepath.Base(path), ".")
 }
 
 //nolint:gocognit,gocyclo,gofumpt // Complexity is acceptable due to multiple skip conditions
@@ -41,16 +26,7 @@ func analyzeFolder(recursive, all bool, rootPath string) (int64, error) {
 
 	err := filepath.WalkDir(rootPath, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
-			return fmt.Errorf("%w: %s %w", internal_errors.ErrAccessDenied, path, err)
-		}
-
-		realPath, err := filepath.EvalSymlinks(path)
-		if err != nil {
-			return internal_errors.ErrSymslinkRead
-		}
-
-		if realPath != path {
-			path = realPath
+			return mapPathError(path, err)
 		}
 
 		if !all && isHidden(path) {
@@ -66,9 +42,14 @@ func analyzeFolder(recursive, all bool, rootPath string) (int64, error) {
 		}
 
 		if !d.IsDir() {
-			info, err := os.Stat(path)
+			info, err := d.Info()
+
+			if d.Type()&fs.ModeSymlink != 0 {
+				info, err = os.Stat(path)
+			}
+
 			if err != nil {
-				return fmt.Errorf("%w: %s %w", internal_errors.ErrReadPath, path, err)
+				return mapPathError(path, err)
 			}
 
 			totalSize += info.Size()
@@ -80,19 +61,14 @@ func analyzeFolder(recursive, all bool, rootPath string) (int64, error) {
 	return totalSize, err
 }
 
-// Analyze path size.
 func Analyze(recursive, all bool, path string) (int64, error) {
-	if realPath, err := filepath.EvalSymlinks(path); err == nil {
-		path = realPath
-	}
-
 	info, err := os.Stat(path)
 	if err != nil {
-		return 0, fmt.Errorf("%w: %s %w", internal_errors.ErrReadPath, path, err)
+		return 0, mapPathError(path, err)
 	}
 
 	if !info.IsDir() {
-		return analyzeFile(path)
+		return info.Size(), nil
 	} else {
 		return analyzeFolder(recursive, all, path)
 	}

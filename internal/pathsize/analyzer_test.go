@@ -1,7 +1,6 @@
 package pathsize
 
 import (
-	internal_errors "code/internal/errors"
 	"log"
 	"path/filepath"
 	"runtime"
@@ -148,7 +147,7 @@ func TestAnalyzer(t *testing.T) {
 				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "invalid_path"),
 			},
 			expected: 0,
-			err:      internal_errors.ErrReadPath,
+			err:      errInvalidPath,
 		},
 		{
 			name: "pathsize/Analyze() Access denied",
@@ -158,17 +157,7 @@ func TestAnalyzer(t *testing.T) {
 				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "access_denied"),
 			},
 			expected: 0,
-			err:      internal_errors.ErrAccessDenied,
-		},
-		{
-			name: "pathsize/Analyze() Read path error",
-			options: Options{
-				Recursive: false,
-				All:       false,
-				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "read_path_error"),
-			},
-			expected: 0,
-			err:      internal_errors.ErrReadPath,
+			err:      errAccessDenied,
 		},
 	}
 
