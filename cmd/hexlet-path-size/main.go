@@ -12,9 +12,6 @@ func main() {
 
 	err := app.Run(context.Background(), os.Args)
 	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "%v\n", err)
-		_, _ = fmt.Fprintf(os.Stdout, "Try use --help\n")
-
 		os.Exit(1)
 	}
 

@@ -1,6 +1,9 @@
 package formatter
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 var sizeSuffixes = []string{"B", "KB", "MB", "GB", "TB", "PB", "EB"}
 
@@ -21,29 +24,24 @@ func formatBytes(size int64) (value float64, unit int) {
 }
 
 // humanizeSize size(int64) -> format output(string)
-func HumanizeSize(size int64) string {
-	if size < unitBase {
+func HumanizeSize(size int64, human bool) string {
+	if size < unitBase || !human {
 		return fmt.Sprintf("%d%s", size, sizeSuffixes[0])
 	}
 
-	result, index := formatBytes(size)
-
-	if result == float64(int64(result)) {
-		return fmt.Sprintf("%.1f%s", result, sizeSuffixes[index])
+	value, unit := formatBytes(size)
+	
+	if math.Mod(value, 1.0) == 0 {
+		return fmt.Sprintf("%.1f%s", value, sizeSuffixes[unit])
 	}
 
-	return fmt.Sprintf("%.2f%s", result, sizeSuffixes[index])
+	return fmt.Sprintf("%.2f%s", value, sizeSuffixes[unit])
+
 }
 
 // GetHumanFormattedResult wrap humanizeSize with cliArgs & path
 func GetHumanFormattedResult(human bool, size int64, path string) string {
-	var formattedResult string
-
-	if human {
-		formattedResult = HumanizeSize(size)
-	} else {
-		formattedResult = fmt.Sprintf("%d%s", size, sizeSuffixes[0])
-	}
+	formattedResult := HumanizeSize(size, human)
 
 	if path != "" {
 		return fmt.Sprintf("%s\t%s", formattedResult, path)

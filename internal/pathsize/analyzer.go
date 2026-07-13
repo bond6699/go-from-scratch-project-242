@@ -12,7 +12,6 @@ import (
 type Options struct {
 	Recursive bool
 	All       bool
-	Human     bool
 	Path      string
 }
 

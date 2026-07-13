@@ -20,9 +20,8 @@ func parseOptions(cmd *cli.Command) (pathsize.Options, error) {
 
 	return pathsize.Options{
 		Recursive: cmd.Bool("recursive"),
-		Human:     cmd.Bool("human"),
 		All:       cmd.Bool("all"),
-		Path:      cmd.Args().Get(0),
+		Path:      cmd.Args().First(),
 	}, nil
 }
 
@@ -38,7 +37,7 @@ func actionLogic(ctx context.Context, cmd *cli.Command) error {
 	}
 
 	fmt.Println(formatter.GetHumanFormattedResult(
-		options.Human,
+		cmd.Bool("human"),
 		result,
 		options.Path,
 	))
