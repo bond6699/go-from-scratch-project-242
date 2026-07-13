@@ -2,14 +2,14 @@ package pathsize
 
 import (
 	"errors"
-	"io/fs"
 	"fmt"
+	"io/fs"
 )
 
 var (
-	errInvalidPath = errors.New("invalid path")
+	errInvalidPath  = errors.New("invalid path")
 	errAccessDenied = errors.New("access denied")
-	errReadPath = errors.New("cannot read path")
+	errReadPath     = errors.New("cannot read path")
 )
 
 func mapPathError(path string, err error) error {

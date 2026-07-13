@@ -6,16 +6,17 @@ var sizeSuffixes = []string{"B", "KB", "MB", "GB", "TB", "PB", "EB"}
 
 const unitBase int64 = 1024
 
-
-func formatBytes(size int64) (float64, int) {
+func formatBytes(size int64) (value float64, unit int) {
 	result := float64(size)
 	for index := range sizeSuffixes {
 		if result >= float64(unitBase) {
 			result /= float64(unitBase)
 			continue
 		}
+
 		return result, index
 	}
+
 	return result, len(sizeSuffixes) - 1
 }
 

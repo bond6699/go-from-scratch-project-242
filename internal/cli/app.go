@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+
 	"github.com/urfave/cli/v3"
 )
 
@@ -37,10 +38,10 @@ func actionLogic(ctx context.Context, cmd *cli.Command) error {
 	}
 
 	fmt.Println(formatter.GetHumanFormattedResult(
-		options.Human, 
-		result, 
+		options.Human,
+		result,
 		options.Path,
-	)) 
+	))
 
 	return nil
 }
@@ -68,5 +69,4 @@ func CreateApp() *cli.Command {
 	}
 
 	return app
-
 }

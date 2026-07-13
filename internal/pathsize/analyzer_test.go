@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"testing"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -32,7 +33,7 @@ func TestAnalyzer(t *testing.T) {
 				All:       false,
 				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "base"),
 			},
-			expected: 25318592, 
+			expected: 25318592,
 			err:      nil,
 		},
 		{

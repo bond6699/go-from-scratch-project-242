@@ -3,8 +3,8 @@
 package pathsize
 
 import (
-	"os"
 	"io/fs"
+	"os"
 	"path/filepath"
 	"strings"
 )
