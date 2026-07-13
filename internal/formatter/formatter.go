@@ -23,7 +23,6 @@ func formatBytes(size int64) (value float64, unit int) {
 	return result, len(sizeSuffixes) - 1
 }
 
-// humanizeSize size(int64) -> format output(string)
 func HumanizeSize(size int64, human bool) string {
 	if size < unitBase || !human {
 		return fmt.Sprintf("%d%s", size, sizeSuffixes[0])
@@ -39,7 +38,6 @@ func HumanizeSize(size int64, human bool) string {
 
 }
 
-// GetHumanFormattedResult wrap humanizeSize with cliArgs & path
 func GetHumanFormattedResult(human bool, size int64, path string) string {
 	formattedResult := HumanizeSize(size, human)
 
