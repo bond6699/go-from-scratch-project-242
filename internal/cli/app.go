@@ -56,7 +56,7 @@ func CreateApp() *cli.Command {
 		UsageText: "hexlet-path-size [global options] <path>",
 		Arguments: []cli.Argument{
 			&cli.StringArg{
-				Name: "path",
+				Name:      "path",
 				UsageText: "<path>",
 			},
 		},
