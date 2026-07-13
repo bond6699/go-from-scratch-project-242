@@ -24,7 +24,7 @@ func TestAnalyzer(t *testing.T) {
 		name     string
 		options  Options
 		expected int64
-		err      error
+		expectedErr      error
 	}{
 		{
 			name: "pathsize/Analyze() Default",
@@ -34,7 +34,7 @@ func TestAnalyzer(t *testing.T) {
 				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "base"),
 			},
 			expected: 25318592,
-			err:      nil,
+			expectedErr:      nil,
 		},
 		{
 			name: "pathsize/Analyze() Folder without recursive",
@@ -44,7 +44,7 @@ func TestAnalyzer(t *testing.T) {
 				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "with_folders"),
 			},
 			expected: 2077016,
-			err:      nil,
+			expectedErr:      nil,
 		},
 		{
 			name: "pathsize/Analyze() Folder with recursive",
@@ -54,7 +54,7 @@ func TestAnalyzer(t *testing.T) {
 				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "with_folders"),
 			},
 			expected: 7304971,
-			err:      nil,
+			expectedErr:      nil,
 		},
 		{
 			name: "pathsize/Analyze() Folder without recursive, with hidden files",
@@ -64,7 +64,7 @@ func TestAnalyzer(t *testing.T) {
 				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "with_hidden_files_and_folders"),
 			},
 			expected: 466268,
-			err:      nil,
+			expectedErr:      nil,
 		},
 		{
 			name: "pathsize/Analyze() Folder without recursive, without hidden files",
@@ -74,7 +74,7 @@ func TestAnalyzer(t *testing.T) {
 				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "with_hidden_files_and_folders"),
 			},
 			expected: 439,
-			err:      nil,
+			expectedErr:      nil,
 		},
 		{
 			name: "pathsize/Analyze() Folder with recursive and hidden files",
@@ -84,41 +84,27 @@ func TestAnalyzer(t *testing.T) {
 				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "with_hidden_files_and_folders"),
 			},
 			expected: 4845982,
-			err:      nil,
+			expectedErr:      nil,
 		},
 		{
 			name: "pathsize/Analyze() File path",
 			options: Options{
 				Recursive: false,
 				All:       true,
-				Path: filepath.Join(
-					root,
-					"internal",
-					"pathsize",
-					"testdata",
-					"with_hidden_files_and_folders",
-					"file2.dll",
-				),
+				Path: filepath.Join(root, "internal", "pathsize", "testdata", "with_hidden_files_and_folders", "file2.dll"),
 			},
 			expected: 325,
-			err:      nil,
+			expectedErr:      nil,
 		},
 		{
 			name: "pathsize/Analyze() Hidden File path",
 			options: Options{
 				Recursive: false,
 				All:       true,
-				Path: filepath.Join(
-					root,
-					"internal",
-					"pathsize",
-					"testdata",
-					"with_hidden_files_and_folders",
-					".hidden_file.dll",
-				),
+				Path: filepath.Join(root, "internal", "pathsize", "testdata", "with_hidden_files_and_folders", ".hidden_file.dll"),
 			},
 			expected: 465905,
-			err:      nil,
+			expectedErr:      nil,
 		},
 		{
 			name: "pathsize/Analyze() Symlink File path",
@@ -128,7 +114,17 @@ func TestAnalyzer(t *testing.T) {
 				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "symlink", "file_symlink.dll"),
 			},
 			expected: 325,
-			err:      nil,
+			expectedErr:      nil,
+		},
+		{
+			name: "pathsize/Analyze() Symlink Folder path",
+			options: Options{
+				Recursive: false,
+				All:       false,
+				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "folder_symlink"),
+			},
+			expected: 25318592,
+			expectedErr:      nil,
 		},
 		{
 			name: "pathsize/Analyze() Folder with Symlink file",
@@ -138,7 +134,7 @@ func TestAnalyzer(t *testing.T) {
 				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "symlink"),
 			},
 			expected: 688,
-			err:      nil,
+			expectedErr:      nil,
 		},
 		{
 			name: "pathsize/Analyze() Invalid path",
@@ -148,7 +144,7 @@ func TestAnalyzer(t *testing.T) {
 				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "invalid_path"),
 			},
 			expected: 0,
-			err:      errInvalidPath,
+			expectedErr:      errInvalidPath,
 		},
 		{
 			name: "pathsize/Analyze() Access denied",
@@ -158,7 +154,27 @@ func TestAnalyzer(t *testing.T) {
 				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "access_denied"),
 			},
 			expected: 0,
-			err:      errAccessDenied,
+			expectedErr:      errAccessDenied,
+		},
+		{
+			name: "pathsize/Analyze() Empty folder with empty file",
+			options: Options{
+				Recursive: false,
+				All:       false,
+				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "empty_folder"),
+			},
+			expected: 0,
+			expectedErr:      nil,
+		},
+		{
+			name: "pathsize/Analyze() Empty file",
+			options: Options{
+				Recursive: false,
+				All:       false,
+				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "empty_folder", "empty_file"),
+			},
+			expected: 0,
+			expectedErr:      nil,
 		},
 	}
 
@@ -166,7 +182,7 @@ func TestAnalyzer(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := Analyze(tt.options.Recursive, tt.options.All, tt.options.Path)
 			assert.Equal(t, tt.expected, got, "path: %s", tt.options.Path)
-			assert.ErrorIs(t, err, tt.err)
+			assert.ErrorIs(t, err, tt.expectedErr)
 		})
 	}
 }
