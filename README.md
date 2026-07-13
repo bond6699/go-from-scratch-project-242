@@ -1,11 +1,9 @@
 # Hexlet Path Size
 
-![CI](https://github.com/<username>/<repository>/actions/workflows/go.yml/badge.svg)
-
-**Hexlet Path Size** — консольная утилита для подсчёта суммарного размера файлов и директорий.
-
 [![hexlet-check](https://github.com/bond6699/go-from-scratch-project-242/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/bond6699/go-from-scratch-project-242/actions/workflows/hexlet-check.yml)
 [![CI](https://github.com/bond6699/go-from-scratch-project-242/actions/workflows/CI.yml/badge.svg)](https://github.com/bond6699/go-from-scratch-project-242/actions/workflows/CI.yml)
+
+**Hexlet Path Size** — консольная утилита для подсчёта суммарного размера файлов и директорий.
 
 
 ## Возможности
