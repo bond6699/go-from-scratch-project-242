@@ -73,7 +73,7 @@ func Analyze(recursive, all bool, path string) (int64, error) {
 
 	if !info.IsDir() {
 		return info.Size(), nil
-	} 
-	
+	}
+
 	return analyzeFolder(recursive, all, path)
 }
