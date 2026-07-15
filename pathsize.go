@@ -7,7 +7,11 @@ import (
 
 // GetPathSize возвращает человекочитаемый размер пути в виде строки.
 func GetPathSize(path string, recursive, all bool) (string, error) {
-	result, err := pathsize.Analyze(recursive, all, path)
+	result, err := pathsize.Analyze(pathsize.Options{
+		Recursive: recursive,
+		All:       all,
+		Path:      path,
+	})
 	if err != nil {
 		return "", err
 	}

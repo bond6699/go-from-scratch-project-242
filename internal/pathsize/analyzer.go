@@ -20,10 +20,10 @@ func isHidden(path string) bool {
 }
 
 //nolint:gocognit,gocyclo,gofumpt // Complexity is acceptable due to multiple skip conditions
-func analyzeFolder(recursive, all bool, rootPath string) (int64, error) {
+func analyzeFolder(options Options) (int64, error) {
 	var totalSize int64
 
-	rootPath, err := filepath.EvalSymlinks(rootPath)
+	rootPath, err := filepath.EvalSymlinks(options.Path)
 	if err != nil {
 		return 0, mapPathError(rootPath, err)
 	}
@@ -33,7 +33,7 @@ func analyzeFolder(recursive, all bool, rootPath string) (int64, error) {
 			return mapPathError(path, err)
 		}
 
-		if !all && isHidden(path) {
+		if !options.All && isHidden(path) {
 			if d.IsDir() {
 				return filepath.SkipDir
 			}
@@ -41,7 +41,7 @@ func analyzeFolder(recursive, all bool, rootPath string) (int64, error) {
 			return nil
 		}
 
-		if d.IsDir() && !recursive && path != rootPath {
+		if d.IsDir() && !options.Recursive && path != rootPath {
 			return filepath.SkipDir
 		}
 
@@ -65,15 +65,15 @@ func analyzeFolder(recursive, all bool, rootPath string) (int64, error) {
 	return totalSize, err
 }
 
-func Analyze(recursive, all bool, path string) (int64, error) {
-	info, err := os.Stat(path)
+func Analyze(options Options) (int64, error) {
+	info, err := os.Stat(options.Path)
 	if err != nil {
-		return 0, mapPathError(path, err)
+		return 0, mapPathError(options.Path, err)
 	}
 
 	if !info.IsDir() {
 		return info.Size(), nil
 	}
 
-	return analyzeFolder(recursive, all, path)
+	return analyzeFolder(options)
 }

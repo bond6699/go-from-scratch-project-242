@@ -29,7 +29,11 @@ func TestPermissionDenied(t *testing.T) {
 		_ = os.Chmod(tempDir, 0o0700)
 	})
 
-	result, err := Analyze(false, false, tempDir)
+	result, err := Analyze(Options{
+		Recursive: false,
+		All:       false,
+		Path:      tempDir,
+	})
 	assert.Equal(t, int64(0), result)
 	assert.ErrorIs(t, err, errAccessDenied)
 }
@@ -200,7 +204,7 @@ func TestAnalyzer(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := Analyze(tt.options.Recursive, tt.options.All, tt.options.Path)
+			got, err := Analyze(tt.options)
 			assert.Equal(t, tt.expected, got, "path: %s", tt.options.Path)
 			assert.ErrorIs(t, err, tt.expectedErr)
 		})
