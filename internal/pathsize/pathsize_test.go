@@ -29,7 +29,7 @@ func TestPermissionDenied(t *testing.T) {
 		_ = os.Chmod(tempDir, 0o0700)
 	})
 
-	result, err := Analyze(Options{
+	result, err := GetPathSize(Options{
 		Recursive: false,
 		All:       false,
 		Path:      tempDir,
@@ -204,7 +204,7 @@ func TestAnalyzer(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := Analyze(tt.options)
+			got, err := GetPathSize(tt.options)
 			assert.Equal(t, tt.expected, got, "path: %s", tt.options.Path)
 			assert.ErrorIs(t, err, tt.expectedErr)
 		})

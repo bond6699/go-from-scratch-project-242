@@ -20,17 +20,17 @@ func isHidden(path string) bool {
 }
 
 //nolint:gocognit,gocyclo,gofumpt // Complexity is acceptable due to multiple skip conditions
-func analyzeFolder(options Options) (int64, error) {
+func getFolderSize(options Options) (int64, error) {
 	var totalSize int64
 
 	rootPath, err := filepath.EvalSymlinks(options.Path)
 	if err != nil {
-		return 0, mapPathError(rootPath, err)
+		return 0, getPathError(rootPath, err)
 	}
 
 	err = filepath.WalkDir(rootPath, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
-			return mapPathError(path, err)
+			return getPathError(path, err)
 		}
 
 		if !options.All && isHidden(path) {
@@ -53,7 +53,7 @@ func analyzeFolder(options Options) (int64, error) {
 			}
 
 			if err != nil {
-				return mapPathError(path, err)
+				return getPathError(path, err)
 			}
 
 			totalSize += info.Size()
@@ -65,15 +65,15 @@ func analyzeFolder(options Options) (int64, error) {
 	return totalSize, err
 }
 
-func Analyze(options Options) (int64, error) {
+func GetPathSize(options Options) (int64, error) {
 	info, err := os.Stat(options.Path)
 	if err != nil {
-		return 0, mapPathError(options.Path, err)
+		return 0, getPathError(options.Path, err)
 	}
 
 	if !info.IsDir() {
 		return info.Size(), nil
 	}
 
-	return analyzeFolder(options)
+	return getFolderSize(options)
 }

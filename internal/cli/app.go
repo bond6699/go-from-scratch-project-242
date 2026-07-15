@@ -13,7 +13,7 @@ import (
 
 var errPathArgsCount = errors.New("invalid argument count")
 
-func parseOptions(cmd *cli.Command) (pathsize.Options, error) {
+func getOptions(cmd *cli.Command) (pathsize.Options, error) {
 	path := cmd.StringArg("path")
 
 	if path == "" {
@@ -28,18 +28,18 @@ func parseOptions(cmd *cli.Command) (pathsize.Options, error) {
 }
 
 func actionLogic(ctx context.Context, cmd *cli.Command) error {
-	options, err := parseOptions(cmd)
+	options, err := getOptions(cmd)
 	if err != nil {
 		_ = cli.ShowRootCommandHelp(cmd)
 		return err
 	}
 
-	result, err := pathsize.Analyze(options)
+	result, err := pathsize.GetPathSize(options)
 	if err != nil {
 		return err
 	}
 
-	fmt.Println(formatter.GetHumanFormattedResult(
+	fmt.Println(formatter.GetHumanResult(
 		cmd.Bool("human"),
 		result,
 		options.Path,
