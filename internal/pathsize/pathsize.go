@@ -1,5 +1,3 @@
-// Package analyzer provides functions for calculating the size of files
-// and directories, with support for recursive traversal and hidden files.
 package pathsize
 
 import (
@@ -24,7 +22,7 @@ func getFolderSize(options Options, path string) (int64, error) {
 
 	rootPath, err := filepath.EvalSymlinks(path)
 	if err != nil {
-		return 0, getPathError(rootPath, err)
+		return 0, getPathError(path, err)
 	}
 
 	err = filepath.WalkDir(rootPath, func(path string, d os.DirEntry, err error) error {
@@ -44,13 +42,21 @@ func getFolderSize(options Options, path string) (int64, error) {
 			return filepath.SkipDir
 		}
 
-		if !d.IsDir() {
-			info, err := d.Info()
+		mode := d.Type()
 
-			if d.Type()&fs.ModeSymlink != 0 {
-				info, err = os.Stat(path)
+		if mode&fs.ModeSymlink != 0 {
+			info, err := os.Stat(path)
+			if err != nil {
+				return getPathError(path, err)
 			}
 
+			totalSize += info.Size()
+
+			return nil
+		}
+
+		if mode&fs.ModeType == 0 {
+			info, err := d.Info()
 			if err != nil {
 				return getPathError(path, err)
 			}
@@ -70,9 +76,9 @@ func GetPathSize(options Options, path string) (int64, error) {
 		return 0, getPathError(path, err)
 	}
 
-	if !info.IsDir() {
-		return info.Size(), nil
+	if info.IsDir() {
+		return getFolderSize(options, path)
 	}
 
-	return getFolderSize(options, path)
+	return info.Size(), nil
 }

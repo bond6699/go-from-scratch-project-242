@@ -2,7 +2,8 @@ package formatter
 
 import (
 	"fmt"
-	"math"
+	"strconv"
+	"strings"
 )
 
 var sizeSuffixes = []string{"B", "KB", "MB", "GB", "TB", "PB", "EB"}
@@ -11,9 +12,11 @@ const unitBase int64 = 1024
 
 func scaleSize(size int64) (value float64, suffixIndex int) {
 	result := float64(size)
+
 	sizeSuffixesIndex := 0
 	for result >= float64(unitBase) {
 		sizeSuffixesIndex++
+
 		if result >= float64(unitBase) {
 			result /= float64(unitBase)
 			continue
@@ -36,11 +39,12 @@ func getHumanSize(human bool, size int64) string {
 		sizeSuffixesIndex = len(sizeSuffixes) - 1
 	}
 
-	if math.Mod(value, 1.0) == 0 {
-		return fmt.Sprintf("%.1f%s", value, sizeSuffixes[sizeSuffixesIndex])
+	formatValue := strconv.FormatFloat(value, 'f', 2, 64)
+	if strings.HasSuffix(formatValue, ".00") {
+		formatValue = strings.TrimSuffix(formatValue, "0")
 	}
 
-	return fmt.Sprintf("%.2f%s", value, sizeSuffixes[sizeSuffixesIndex])
+	return formatValue + sizeSuffixes[sizeSuffixesIndex]
 }
 
 func GetHumanResult(human bool, size int64, path string) string {

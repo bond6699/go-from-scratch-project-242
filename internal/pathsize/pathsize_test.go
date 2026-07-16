@@ -42,7 +42,7 @@ func TestAnalyzer(t *testing.T) {
 	tests := []struct {
 		name        string
 		options     Options
-		path		string
+		path        string
 		expected    int64
 		expectedErr error
 	}{
@@ -62,7 +62,7 @@ func TestAnalyzer(t *testing.T) {
 				Recursive: false,
 				All:       false,
 			},
-			path: 	     filepath.Join(root, "internal", "pathsize", "testdata", "with_folders"),
+			path:        filepath.Join(root, "internal", "pathsize", "testdata", "with_folders"),
 			expected:    2077016,
 			expectedErr: nil,
 		},
@@ -72,7 +72,7 @@ func TestAnalyzer(t *testing.T) {
 				Recursive: true,
 				All:       false,
 			},
-			path: 	     filepath.Join(root, "internal", "pathsize", "testdata", "with_folders"),
+			path:        filepath.Join(root, "internal", "pathsize", "testdata", "with_folders"),
 			expected:    7304971,
 			expectedErr: nil,
 		},
@@ -112,7 +112,14 @@ func TestAnalyzer(t *testing.T) {
 				Recursive: false,
 				All:       true,
 			},
-			path:        filepath.Join(root, "internal", "pathsize", "testdata", "with_hidden_files_and_folders", "file2.dll"),
+			path: filepath.Join(
+				root,
+				"internal",
+				"pathsize",
+				"testdata",
+				"with_hidden_files_and_folders",
+				"file2.dll",
+			),
 			expected:    325,
 			expectedErr: nil,
 		},
@@ -122,7 +129,14 @@ func TestAnalyzer(t *testing.T) {
 				Recursive: false,
 				All:       true,
 			},
-			path: filepath.Join(root, "internal", "pathsize", "testdata", "with_hidden_files_and_folders", ".hidden_file.dll"),
+			path: filepath.Join(
+				root,
+				"internal",
+				"pathsize",
+				"testdata",
+				"with_hidden_files_and_folders",
+				".hidden_file.dll",
+			),
 			expected:    465905,
 			expectedErr: nil,
 		},
@@ -131,8 +145,8 @@ func TestAnalyzer(t *testing.T) {
 			options: Options{
 				Recursive: false,
 				All:       false,
-},
-			path: filepath.Join(root, "internal", "pathsize", "testdata", "symlink", "file_symlink.dll"),
+			},
+			path:        filepath.Join(root, "internal", "pathsize", "testdata", "symlink", "file_symlink.dll"),
 			expected:    325,
 			expectedErr: nil,
 		},
@@ -142,7 +156,7 @@ func TestAnalyzer(t *testing.T) {
 				Recursive: false,
 				All:       false,
 			},
-			path: filepath.Join(root, "internal", "pathsize", "testdata", "folder_symlink"),
+			path:        filepath.Join(root, "internal", "pathsize", "testdata", "folder_symlink"),
 			expected:    25318592,
 			expectedErr: nil,
 		},
@@ -152,7 +166,7 @@ func TestAnalyzer(t *testing.T) {
 				Recursive: false,
 				All:       false,
 			},
-			path: filepath.Join(root, "internal", "pathsize", "testdata", "symlink"),
+			path:        filepath.Join(root, "internal", "pathsize", "testdata", "symlink"),
 			expected:    688,
 			expectedErr: nil,
 		},
@@ -172,7 +186,7 @@ func TestAnalyzer(t *testing.T) {
 				Recursive: false,
 				All:       false,
 			},
-			path:        filepath.Join(root, "internal", "pathsize", "testdata", "empty_folder"),			expected:    0,
+			path: filepath.Join(root, "internal", "pathsize", "testdata", "empty_folder"), expected: 0,
 			expectedErr: nil,
 		},
 		{
