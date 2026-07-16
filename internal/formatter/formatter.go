@@ -9,7 +9,7 @@ var sizeSuffixes = []string{"B", "KB", "MB", "GB", "TB", "PB", "EB"}
 
 const unitBase int64 = 1024
 
-func getFormatBytes(size int64) (value float64, suffixIndex int) {
+func scaleSize(size int64) (value float64, suffixIndex int) {
 	result := float64(size)
 	sizeSuffixesIndex := 0
 	for result >= float64(unitBase) {
@@ -30,7 +30,7 @@ func getHumanSize(human bool, size int64) string {
 		return fmt.Sprintf("%d%s", size, sizeSuffixes[0])
 	}
 
-	value, sizeSuffixesIndex := getFormatBytes(size)
+	value, sizeSuffixesIndex := scaleSize(size)
 
 	if sizeSuffixesIndex > len(sizeSuffixes)-1 {
 		sizeSuffixesIndex = len(sizeSuffixes) - 1
