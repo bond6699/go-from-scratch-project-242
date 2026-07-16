@@ -9,18 +9,20 @@ var sizeSuffixes = []string{"B", "KB", "MB", "GB", "TB", "PB", "EB"}
 
 const unitBase int64 = 1024
 
-func getFormatBytes(size int64) (value float64, unit int) {
+func getFormatBytes(size int64) (value float64, suffixIndex int) {
 	result := float64(size)
-	for index := range sizeSuffixes {
+	sizeSuffixesIndex := 0
+	for result >= float64(unitBase) {
+		sizeSuffixesIndex++
 		if result >= float64(unitBase) {
 			result /= float64(unitBase)
 			continue
 		}
 
-		return result, index
+		return result, sizeSuffixesIndex
 	}
 
-	return result, len(sizeSuffixes) - 1
+	return result, sizeSuffixesIndex
 }
 
 func getHumanSize(human bool, size int64) string {
@@ -28,13 +30,17 @@ func getHumanSize(human bool, size int64) string {
 		return fmt.Sprintf("%d%s", size, sizeSuffixes[0])
 	}
 
-	value, unit := getFormatBytes(size)
+	value, sizeSuffixesIndex := getFormatBytes(size)
 
-	if math.Mod(value, 1.0) == 0 {
-		return fmt.Sprintf("%.1f%s", value, sizeSuffixes[unit])
+	if sizeSuffixesIndex > len(sizeSuffixes)-1 {
+		sizeSuffixesIndex = len(sizeSuffixes) - 1
 	}
 
-	return fmt.Sprintf("%.2f%s", value, sizeSuffixes[unit])
+	if math.Mod(value, 1.0) == 0 {
+		return fmt.Sprintf("%.1f%s", value, sizeSuffixes[sizeSuffixesIndex])
+	}
+
+	return fmt.Sprintf("%.2f%s", value, sizeSuffixes[sizeSuffixesIndex])
 }
 
 func GetHumanResult(human bool, size int64, path string) string {
