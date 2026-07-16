@@ -12,10 +12,11 @@ func main() {
 
 	err := app.Run(context.Background(), os.Args)
 	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "\n%v\n", err)
+		_, _ = fmt.Fprintln(os.Stderr, err)
 
 		os.Exit(1)
 	}
 
 	os.Exit(0)
 }
+

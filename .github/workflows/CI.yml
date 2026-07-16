@@ -7,8 +7,8 @@ on:
     branches: [main, master]
 
 jobs:
-  ci:
-    name: CI
+  build:
+    name: Build and Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -25,16 +25,24 @@ jobs:
         run: go build -v ./...
       
       - name: Test
-        run: go test -v -race -coverprofile=coverage.out ./...
+        run: go test -v -race ./...
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+      
+      - name: Download dependencies
+        run: go mod download
       
       - name: Lint
         uses: golangci/golangci-lint-action@v7
         with:
           version: v2.12
           args: --timeout=5m
-
-      - name: Upload coverage
-        uses: codecov/codecov-action@v4
-        with:
-          file: ./coverage.out
-          fail_ci_if_error: false

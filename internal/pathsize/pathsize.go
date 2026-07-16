@@ -12,7 +12,6 @@ import (
 type Options struct {
 	Recursive bool
 	All       bool
-	Path      string
 }
 
 func isHidden(path string) bool {
@@ -20,10 +19,10 @@ func isHidden(path string) bool {
 }
 
 //nolint:gocognit,gocyclo,gofumpt // Complexity is acceptable due to multiple skip conditions
-func getFolderSize(options Options) (int64, error) {
+func getFolderSize(options Options, path string) (int64, error) {
 	var totalSize int64
 
-	rootPath, err := filepath.EvalSymlinks(options.Path)
+	rootPath, err := filepath.EvalSymlinks(path)
 	if err != nil {
 		return 0, getPathError(rootPath, err)
 	}
@@ -65,15 +64,15 @@ func getFolderSize(options Options) (int64, error) {
 	return totalSize, err
 }
 
-func GetPathSize(options Options) (int64, error) {
-	info, err := os.Stat(options.Path)
+func GetPathSize(options Options, path string) (int64, error) {
+	info, err := os.Stat(path)
 	if err != nil {
-		return 0, getPathError(options.Path, err)
+		return 0, getPathError(path, err)
 	}
 
 	if !info.IsDir() {
 		return info.Size(), nil
 	}
 
-	return getFolderSize(options)
+	return getFolderSize(options, path)
 }

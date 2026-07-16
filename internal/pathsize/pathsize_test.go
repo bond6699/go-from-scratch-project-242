@@ -32,8 +32,7 @@ func TestPermissionDenied(t *testing.T) {
 	result, err := GetPathSize(Options{
 		Recursive: false,
 		All:       false,
-		Path:      tempDir,
-	})
+	}, tempDir)
 	assert.Equal(t, int64(0), result)
 	assert.ErrorIs(t, err, errAccessDenied)
 }
@@ -43,6 +42,7 @@ func TestAnalyzer(t *testing.T) {
 	tests := []struct {
 		name        string
 		options     Options
+		path		string
 		expected    int64
 		expectedErr error
 	}{
@@ -51,8 +51,8 @@ func TestAnalyzer(t *testing.T) {
 			options: Options{
 				Recursive: false,
 				All:       false,
-				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "base"),
 			},
+			path:        filepath.Join(root, "internal", "pathsize", "testdata", "base"),
 			expected:    25318592,
 			expectedErr: nil,
 		},
@@ -61,8 +61,8 @@ func TestAnalyzer(t *testing.T) {
 			options: Options{
 				Recursive: false,
 				All:       false,
-				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "with_folders"),
 			},
+			path: 	     filepath.Join(root, "internal", "pathsize", "testdata", "with_folders"),
 			expected:    2077016,
 			expectedErr: nil,
 		},
@@ -71,8 +71,8 @@ func TestAnalyzer(t *testing.T) {
 			options: Options{
 				Recursive: true,
 				All:       false,
-				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "with_folders"),
 			},
+			path: 	     filepath.Join(root, "internal", "pathsize", "testdata", "with_folders"),
 			expected:    7304971,
 			expectedErr: nil,
 		},
@@ -81,8 +81,8 @@ func TestAnalyzer(t *testing.T) {
 			options: Options{
 				Recursive: false,
 				All:       true,
-				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "with_hidden_files_and_folders"),
 			},
+			path:        filepath.Join(root, "internal", "pathsize", "testdata", "with_hidden_files_and_folders"),
 			expected:    466268,
 			expectedErr: nil,
 		},
@@ -91,8 +91,8 @@ func TestAnalyzer(t *testing.T) {
 			options: Options{
 				Recursive: true,
 				All:       false,
-				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "with_hidden_files_and_folders"),
 			},
+			path:        filepath.Join(root, "internal", "pathsize", "testdata", "with_hidden_files_and_folders"),
 			expected:    439,
 			expectedErr: nil,
 		},
@@ -101,8 +101,8 @@ func TestAnalyzer(t *testing.T) {
 			options: Options{
 				Recursive: true,
 				All:       true,
-				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "with_hidden_files_and_folders"),
 			},
+			path:        filepath.Join(root, "internal", "pathsize", "testdata", "with_hidden_files_and_folders"),
 			expected:    4845982,
 			expectedErr: nil,
 		},
@@ -111,15 +111,8 @@ func TestAnalyzer(t *testing.T) {
 			options: Options{
 				Recursive: false,
 				All:       true,
-				Path: filepath.Join(
-					root,
-					"internal",
-					"pathsize",
-					"testdata",
-					"with_hidden_files_and_folders",
-					"file2.dll",
-				),
 			},
+			path:        filepath.Join(root, "internal", "pathsize", "testdata", "with_hidden_files_and_folders", "file2.dll"),
 			expected:    325,
 			expectedErr: nil,
 		},
@@ -128,15 +121,8 @@ func TestAnalyzer(t *testing.T) {
 			options: Options{
 				Recursive: false,
 				All:       true,
-				Path: filepath.Join(
-					root,
-					"internal",
-					"pathsize",
-					"testdata",
-					"with_hidden_files_and_folders",
-					".hidden_file.dll",
-				),
 			},
+			path: filepath.Join(root, "internal", "pathsize", "testdata", "with_hidden_files_and_folders", ".hidden_file.dll"),
 			expected:    465905,
 			expectedErr: nil,
 		},
@@ -145,8 +131,8 @@ func TestAnalyzer(t *testing.T) {
 			options: Options{
 				Recursive: false,
 				All:       false,
-				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "symlink", "file_symlink.dll"),
-			},
+},
+			path: filepath.Join(root, "internal", "pathsize", "testdata", "symlink", "file_symlink.dll"),
 			expected:    325,
 			expectedErr: nil,
 		},
@@ -155,8 +141,8 @@ func TestAnalyzer(t *testing.T) {
 			options: Options{
 				Recursive: false,
 				All:       false,
-				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "folder_symlink"),
 			},
+			path: filepath.Join(root, "internal", "pathsize", "testdata", "folder_symlink"),
 			expected:    25318592,
 			expectedErr: nil,
 		},
@@ -165,8 +151,8 @@ func TestAnalyzer(t *testing.T) {
 			options: Options{
 				Recursive: false,
 				All:       false,
-				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "symlink"),
 			},
+			path: filepath.Join(root, "internal", "pathsize", "testdata", "symlink"),
 			expected:    688,
 			expectedErr: nil,
 		},
@@ -175,8 +161,8 @@ func TestAnalyzer(t *testing.T) {
 			options: Options{
 				Recursive: false,
 				All:       false,
-				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "invalid_path"),
 			},
+			path:        filepath.Join(root, "internal", "pathsize", "testdata", "invalid_path"),
 			expected:    0,
 			expectedErr: errInvalidPath,
 		},
@@ -185,9 +171,8 @@ func TestAnalyzer(t *testing.T) {
 			options: Options{
 				Recursive: false,
 				All:       false,
-				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "empty_folder"),
 			},
-			expected:    0,
+			path:        filepath.Join(root, "internal", "pathsize", "testdata", "empty_folder"),			expected:    0,
 			expectedErr: nil,
 		},
 		{
@@ -195,8 +180,8 @@ func TestAnalyzer(t *testing.T) {
 			options: Options{
 				Recursive: false,
 				All:       false,
-				Path:      filepath.Join(root, "internal", "pathsize", "testdata", "empty_folder", "empty_file"),
 			},
+			path:        filepath.Join(root, "internal", "pathsize", "testdata", "empty_folder", "empty_file"),
 			expected:    0,
 			expectedErr: nil,
 		},
@@ -204,8 +189,8 @@ func TestAnalyzer(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := GetPathSize(tt.options)
-			assert.Equal(t, tt.expected, got, "path: %s", tt.options.Path)
+			got, err := GetPathSize(tt.options, tt.path)
+			assert.Equal(t, tt.expected, got, "path: %s", tt.path)
 			assert.ErrorIs(t, err, tt.expectedErr)
 		})
 	}

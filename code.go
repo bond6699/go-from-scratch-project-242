@@ -10,8 +10,7 @@ func GetPathSize(path string, recursive, all bool) (string, error) {
 	result, err := pathsize.GetPathSize(pathsize.Options{
 		Recursive: recursive,
 		All:       all,
-		Path:      path,
-	})
+	}, path)
 	if err != nil {
 		return "", err
 	}
