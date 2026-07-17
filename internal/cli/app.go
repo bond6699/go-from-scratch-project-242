@@ -30,7 +30,7 @@ func actionLogic(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	result, err := code.GetPathSize(
+	size, err := code.GetPathSize(
 		path,
 		cmd.Bool("recursive"),
 		cmd.Bool("human"),
@@ -41,14 +41,14 @@ func actionLogic(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	formatResult := formatter.GetHumanResult(cmd.Bool("human"), result, path)
+	formatResult := formatter.GetHumanResult(cmd.Bool("human"), size, path)
 
 	fmt.Println(formatResult)
 
 	return nil
 }
 
-func CreateApp() *cli.Command {
+func NewApp() *cli.Command {
 	app := &cli.Command{
 		Name:      "hexlet-path-size",
 		Usage:     "print size of a file or directory; supports -r (recursive), -H (human-readable), -a (include hidden)",
