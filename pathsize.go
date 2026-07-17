@@ -6,7 +6,7 @@ import (
 )
 
 // GetPathSize возвращает человекочитаемый размер пути в виде строки.
-func GetPathSize(path string, recursive, all, human bool) (string, error) {
+func GetPathSize(path string, recursive, human, all bool) (string, error) {
 	result, err := pathsize.GetPathSize(pathsize.Options{
 		Recursive: recursive,
 		All:       all,
