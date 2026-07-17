@@ -40,7 +40,7 @@ func getHumanSize(human bool, size int64) string {
 	}
 
 	formatValue := strconv.FormatFloat(value, 'f', 2, 64)
-	if strings.HasSuffix(formatValue, ".00") {
+	if strings.HasSuffix(formatValue, "0") {
 		formatValue = strings.TrimSuffix(formatValue, "0")
 	}
 

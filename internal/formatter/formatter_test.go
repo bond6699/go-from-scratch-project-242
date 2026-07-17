@@ -19,6 +19,7 @@ func TestFormatter(t *testing.T) {
 		{"test5", 12745409, "12.15MB"},
 		{"test6", 120, "120B"},
 		{"test7", 2048, "2.0KB"},
+		{"test8", 1536, "1.5KB"},
 	}
 
 	for _, tt := range tests {
