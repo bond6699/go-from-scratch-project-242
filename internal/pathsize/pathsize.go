@@ -22,12 +22,12 @@ func getFolderSize(options Options, path string) (int64, error) {
 
 	rootPath, err := filepath.EvalSymlinks(path)
 	if err != nil {
-		return 0, getPathError(path, err)
+		return 0, wrapPathError(path, err)
 	}
 
 	err = filepath.WalkDir(rootPath, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
-			return getPathError(path, err)
+			return wrapPathError(path, err)
 		}
 
 		if !options.All && isHidden(path) {
@@ -44,21 +44,10 @@ func getFolderSize(options Options, path string) (int64, error) {
 
 		mode := d.Type()
 
-		if mode&fs.ModeSymlink != 0 {
+		if mode.IsRegular() || mode&fs.ModeSymlink != 0 {
 			info, err := os.Stat(path)
 			if err != nil {
-				return getPathError(path, err)
-			}
-
-			totalSize += info.Size()
-
-			return nil
-		}
-
-		if mode&fs.ModeType == 0 {
-			info, err := d.Info()
-			if err != nil {
-				return getPathError(path, err)
+				return wrapPathError(path, err)
 			}
 
 			totalSize += info.Size()
@@ -73,7 +62,7 @@ func getFolderSize(options Options, path string) (int64, error) {
 func GetPathSize(options Options, path string) (int64, error) {
 	info, err := os.Stat(path)
 	if err != nil {
-		return 0, getPathError(path, err)
+		return 0, wrapPathError(path, err)
 	}
 
 	if info.IsDir() {

@@ -12,7 +12,7 @@ var (
 	errReadPath     = errors.New("cannot read path")
 )
 
-func getPathError(path string, err error) error {
+func wrapPathError(path string, err error) error {
 	switch {
 	case errors.Is(err, fs.ErrNotExist):
 		return fmt.Errorf("%w: %s: %w", errInvalidPath, path, err)
