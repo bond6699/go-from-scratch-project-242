@@ -37,7 +37,7 @@ func GetHumanSize(human bool, size int64) string {
 	return formatValue + sizeSuffix
 }
 
-func GetHumanResult(human bool, formatSize string, path string) string {
+func GetHumanResult(human bool, formatSize, path string) string {
 	if path != "" {
 		return fmt.Sprintf("%s\t%s", formatSize, path)
 	}
