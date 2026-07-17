@@ -24,7 +24,7 @@ func TestFormatter(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := getHumanSize(true, tt.size)
+			got := GetHumanSize(true, tt.size)
 			assert.Equal(t, tt.expected, got)
 		})
 	}

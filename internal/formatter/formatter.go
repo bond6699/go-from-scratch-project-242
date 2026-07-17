@@ -24,7 +24,7 @@ func scaleSize(size int64) (value float64, suffix string) {
 	return result, sizeSuffixes[len(sizeSuffixes)-1]
 }
 
-func getHumanSize(human bool, size int64) string {
+func GetHumanSize(human bool, size int64) string {
 	if size < int64(unitBase) || !human {
 		return fmt.Sprintf("%d%s", size, sizeSuffixes[0])
 	}
@@ -37,12 +37,10 @@ func getHumanSize(human bool, size int64) string {
 	return formatValue + sizeSuffix
 }
 
-func GetHumanResult(human bool, size int64, path string) string {
-	formattedResult := getHumanSize(human, size)
-
+func GetHumanResult(human bool, formatSize string, path string) string {
 	if path != "" {
-		return fmt.Sprintf("%s\t%s", formattedResult, path)
+		return fmt.Sprintf("%s\t%s", formatSize, path)
 	}
 
-	return formattedResult
+	return formatSize
 }

@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"code/internal/formatter"
 
 	"github.com/urfave/cli/v3"
 )
@@ -40,7 +41,9 @@ func actionLogic(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	fmt.Println(result)
+	formatResult := formatter.GetHumanResult(cmd.Bool("human"), result, path)
+
+	fmt.Println(formatResult)
 
 	return nil
 }
