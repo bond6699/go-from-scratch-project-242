@@ -13,25 +13,31 @@ import (
 
 var errPathArgsCount = errors.New("invalid argument count")
 
-func getOptions(cmd *cli.Command) (pathsize.Options, string, error) {
+func getPath(cmd *cli.Command) (string, error) {
 	path := cmd.StringArg("path")
 
 	if path == "" {
-		return pathsize.Options{}, "", errPathArgsCount
+		return "", errPathArgsCount
 	}
 
+	return path, nil
+}
+
+func getOptions(cmd *cli.Command) pathsize.Options {
 	return pathsize.Options{
 		Recursive: cmd.Bool("recursive"),
 		All:       cmd.Bool("all"),
-	}, path, nil
+	}
 }
 
 func actionLogic(ctx context.Context, cmd *cli.Command) error {
-	options, path, err := getOptions(cmd)
+	path, err := getPath(cmd)
 	if err != nil {
 		_ = cli.ShowRootCommandHelp(cmd)
 		return err
 	}
+
+	options := getOptions(cmd)
 
 	result, err := pathsize.GetPathSize(options, path)
 	if err != nil {
