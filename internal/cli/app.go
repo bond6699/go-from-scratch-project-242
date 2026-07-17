@@ -2,8 +2,7 @@
 package cli
 
 import (
-	"code/internal/formatter"
-	"code/internal/pathsize"
+	"code"
 	"context"
 	"errors"
 	"fmt"
@@ -23,13 +22,6 @@ func getPath(cmd *cli.Command) (string, error) {
 	return path, nil
 }
 
-func getOptions(cmd *cli.Command) pathsize.Options {
-	return pathsize.Options{
-		Recursive: cmd.Bool("recursive"),
-		All:       cmd.Bool("all"),
-	}
-}
-
 func actionLogic(ctx context.Context, cmd *cli.Command) error {
 	path, err := getPath(cmd)
 	if err != nil {
@@ -37,18 +29,18 @@ func actionLogic(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	options := getOptions(cmd)
-
-	result, err := pathsize.GetPathSize(options, path)
+	result, err := code.GetPathSize(
+		path,
+		cmd.Bool("recursive"),
+		cmd.Bool("human"),
+		cmd.Bool("all"),
+	)
 	if err != nil {
+		_ = cli.ShowRootCommandHelp(cmd)
 		return err
 	}
 
-	fmt.Println(formatter.GetHumanResult(
-		cmd.Bool("human"),
-		result,
-		path,
-	))
+	fmt.Println(result)
 
 	return nil
 }

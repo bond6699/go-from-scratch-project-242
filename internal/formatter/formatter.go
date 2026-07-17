@@ -8,41 +8,33 @@ import (
 
 var sizeSuffixes = []string{"B", "KB", "MB", "GB", "TB", "PB", "EB"}
 
-const unitBase int64 = 1024
+const unitBase float64 = 1024
 
-func scaleSize(size int64) (value float64, suffixIndex int) {
+func scaleSize(size int64) (value float64, suffix string) {
 	result := float64(size)
 
-	sizeSuffixesIndex := 0
-	for result >= float64(unitBase) {
-		sizeSuffixesIndex++
-
-		if result >= float64(unitBase) {
-			result /= float64(unitBase)
-			continue
+	for _, sizeSuffix := range sizeSuffixes {
+		if result < unitBase {
+			return result, sizeSuffix
 		}
 
-		return result, sizeSuffixesIndex
+		result /= unitBase
 	}
 
-	return result, sizeSuffixesIndex
+	return result, sizeSuffixes[len(sizeSuffixes)-1]
 }
 
 func getHumanSize(human bool, size int64) string {
-	if size < unitBase || !human {
+	if size < int64(unitBase) || !human {
 		return fmt.Sprintf("%d%s", size, sizeSuffixes[0])
 	}
 
-	value, sizeSuffixesIndex := scaleSize(size)
-
-	if sizeSuffixesIndex > len(sizeSuffixes)-1 {
-		sizeSuffixesIndex = len(sizeSuffixes) - 1
-	}
+	value, sizeSuffix := scaleSize(size)
 
 	formatValue := strconv.FormatFloat(value, 'f', 2, 64)
 	formatValue = strings.TrimSuffix(formatValue, "0")
 
-	return formatValue + sizeSuffixes[sizeSuffixesIndex]
+	return formatValue + sizeSuffix
 }
 
 func GetHumanResult(human bool, size int64, path string) string {
